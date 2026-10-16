@@ -63,7 +63,7 @@ struct MoreView: View {
                 }
 
                 Section {
-                    Link(destination: URL(string: "https://github.com/katagaki/Fundsee")!) {
+                    Link(destination: URL(string: "https://github.com/AtelierSuite/Funds")!) {
                         HStack {
                             SettingsLabel(
                                 title: "More.SourceCode",
@@ -71,7 +71,7 @@ struct MoreView: View {
                                 color: .gray
                             )
                             Spacer()
-                            Text(verbatim: "katagaki/Fundsee")
+                            Text(verbatim: "AtelierSuite/Funds")
                                 .foregroundStyle(.secondary)
                         }
                     }

@@ -2284,7 +2284,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Assign a plan to each weekday and Fundsee works out your week and month."
+            "value" : "Assign a plan to each weekday and Funds works out your week and month."
           }
         },
         "ja" : {
@@ -2302,13 +2302,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "为每个星期几指定方案，Fundsee 会自动算出你的每周和每月预算。"
+            "value" : "为每个星期几指定方案，Funds 会自动算出你的每周和每月预算。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "為每個星期幾指定方案，Fundsee 會自動算出你的每週和每月預算。"
+            "value" : "為每個星期幾指定方案，Funds 會自動算出你的每週和每月預算。"
           }
         }
       }
@@ -2624,31 +2624,31 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Welcome to Fundsee"
+            "value" : "Welcome to Funds"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundseeへようこそ"
+            "value" : "ファンドへようこそ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundsee에 오신 것을 환영합니다"
+            "value" : "Funds에 오신 것을 환영합니다"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "欢迎使用 Fundsee"
+            "value" : "欢迎使用 Funds"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "歡迎使用 Fundsee"
+            "value" : "歡迎使用 Funds"
           }
         }
       }

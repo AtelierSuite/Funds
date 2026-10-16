@@ -365,8 +365,9 @@
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Funds;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Fundsee sends you daily, weekly, and monthly budget reports.";
+				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Funds sends you daily, weekly, and monthly budget reports.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
@@ -402,8 +403,9 @@
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Funds;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Fundsee sends you daily, weekly, and monthly budget reports.";
+				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Funds sends you daily, weekly, and monthly budget reports.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
@@ -437,7 +439,7 @@
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FundseeWidgets/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Fundsee;
+				INFOPLIST_KEY_CFBundleDisplayName = Funds;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -467,7 +469,7 @@
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FundseeWidgets/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Fundsee;
+				INFOPLIST_KEY_CFBundleDisplayName = Funds;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

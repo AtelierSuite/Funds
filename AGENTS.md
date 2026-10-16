@@ -1,9 +1,10 @@
-# Fundsee
+# Funds
 
-A visual budget management app for iOS 26.0+. Users define budget templates for the kinds of days they have (working from office, working from home, not working), assign a template to each weekday, and record spending per category each day. Daily, weekly, monthly, and yearly views show budget health with charts instead of forms and tables.
+Funds (ファンド in Japanese) is a visual budget management app for iOS 26.0+. Users define budget templates for the kinds of days they have (working from office, working from home, not working), assign a template to each weekday, and record spending per category each day. Daily, weekly, monthly, and yearly views show budget health with charts instead of forms and tables.
 
 ## Things you cannot tell from the code
 
+- The app was renamed from Fundsee to Funds. Only user-facing names changed; targets, folders, schemes, the bundle ID and the App Group (`group.com.tsubuzaki.Fundsee`) keep the old name so existing data and CloudKit identity are preserved.
 - The `.xcodeproj` was written by hand with synchronized folder groups. Adding a file to a target's folder adds it to that target; there are no per-file build entries to maintain.
 - **BudgetKit/** is intentionally a shared source folder, not a framework. Its files compile into both targets.
 - Widget UIs are inspected through the per-family `FundseeWidgets (…)` schemes, which run the extension in the Simulator's widget preview host. There is no in-app debug surface for them; keep debug-only affordances out of the app.

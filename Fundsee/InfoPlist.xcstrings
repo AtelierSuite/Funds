@@ -1,14 +1,36 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "CFBundleName" : {
-      "comment" : "Bundle name",
-      "extractionState" : "extracted_with_value",
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Fundsee"
+            "state" : "translated",
+            "value" : "Funds"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファンド"
+          }
+        }
+      }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Funds"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファンド"
           }
         }
       }
@@ -19,31 +41,31 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundsee sends you daily, weekly, and monthly budget reports."
+            "value" : "Funds sends you daily, weekly, and monthly budget reports."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundseeは日次・週次・月次の予算レポートを通知でお届けします。"
+            "value" : "ファンドは日次・週次・月次の予算レポートを通知でお届けします。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundsee가 일간, 주간, 월간 예산 리포트를 보내 드립니다."
+            "value" : "Funds가 일간, 주간, 월간 예산 리포트를 보내 드립니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundsee 会向你发送每日、每周和每月的预算报告。"
+            "value" : "Funds 会向你发送每日、每周和每月的预算报告。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundsee 會向你傳送每日、每週和每月的預算報告。"
+            "value" : "Funds 會向你傳送每日、每週和每月的預算報告。"
           }
         }
       }

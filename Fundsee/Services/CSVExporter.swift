@@ -17,7 +17,7 @@ enum CSVExporter {
             csv += fields.joined(separator: ",") + "\n"
         }
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("Fundsee-Export-\(Date.now.formatted(.iso8601.year().month().day())).csv")
+            .appendingPathComponent("Funds-Export-\(Date.now.formatted(.iso8601.year().month().day())).csv")
         try csv.data(using: .utf8)?.write(to: url, options: .atomic)
         return url
     }
@@ -32,7 +32,7 @@ enum CSVExporter {
             }
         }
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("Fundsee-Templates.csv")
+            .appendingPathComponent("Funds-Templates.csv")
         try csv.data(using: .utf8)?.write(to: url, options: .atomic)
         return url
     }
