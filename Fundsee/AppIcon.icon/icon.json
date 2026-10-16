@@ -1,24 +1,23 @@
 {
   "fill" : {
-    "automatic-gradient" : "extended-srgb:0.00000,0.68000,0.66000,1.00000"
+    "automatic-gradient" : "extended-srgb:0.06000,0.30000,0.12000,1.00000"
   },
   "groups" : [
     {
       "blend-mode" : "normal",
+      "blur-material" : null,
       "layers" : [
         {
           "fill-specializations" : [
             {
               "appearance" : "dark",
-              "value" : {
-                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
-              }
+              "value" : "none"
             }
           ],
           "glass" : true,
           "hidden" : false,
-          "image-name" : "Clasp.svg",
-          "name" : "Clasp",
+          "image-name" : "Button.svg",
+          "name" : "Button",
           "position-specializations" : [
             {
               "value" : {
@@ -40,7 +39,96 @@
               }
             }
           ]
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0
+      },
+      "specular" : true,
+      "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 1
+          }
         },
+        {
+          "appearance" : "dark",
+          "value" : {
+            "enabled" : true,
+            "value" : 0.7
+          }
+        }
+      ]
+    },
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "Tab.svg",
+          "name" : "Tab",
+          "position-specializations" : [
+            {
+              "value" : {
+                "scale" : 1,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "idiom" : "square",
+              "value" : {
+                "scale" : 1.15,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "shadow-specializations" : [
+        {
+          "value" : {
+            "kind" : "layer-color",
+            "opacity" : 1.4
+          }
+        },
+        {
+          "appearance" : "dark",
+          "value" : {
+            "kind" : "neutral",
+            "opacity" : 1.4
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "kind" : "neutral",
+            "opacity" : 0.6
+          }
+        }
+      ],
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.59
+      }
+    },
+    {
+      "layers" : [
         {
           "glass" : true,
           "hidden" : false,
@@ -71,12 +159,11 @@
       ],
       "shadow" : {
         "kind" : "neutral",
-        "opacity" : 0.5
+        "opacity" : 0.6
       },
-      "specular" : true,
       "translucency" : {
         "enabled" : true,
-        "value" : 0.5
+        "value" : 0.2
       }
     }
   ],
