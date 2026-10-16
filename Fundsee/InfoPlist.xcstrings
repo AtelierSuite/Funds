@@ -9,12 +9,6 @@
             "state" : "translated",
             "value" : "Funds"
           }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ファンド"
-          }
         }
       }
     },
@@ -25,12 +19,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Funds"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ファンド"
           }
         }
       }
@@ -47,7 +35,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ファンドは日次・週次・月次の予算レポートを通知でお届けします。"
+            "value" : "Fundsは日次・週次・月次の予算レポートを通知でお届けします。"
           }
         },
         "ko" : {
