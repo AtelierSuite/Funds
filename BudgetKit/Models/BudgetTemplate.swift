@@ -9,6 +9,8 @@ final class BudgetTemplate {
     var createdAt: Date = Date.now
     @Relationship(deleteRule: .cascade, inverse: \TemplateCategory.template)
     var categories: [TemplateCategory]? = []
+    @Relationship(deleteRule: .cascade, inverse: \DayOverride.template)
+    var overrides: [DayOverride]? = []
 
     init(name: String, iconName: String) {
         self.uuid = UUID().uuidString

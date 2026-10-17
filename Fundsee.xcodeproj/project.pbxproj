@@ -47,11 +47,21 @@
 			);
 			target = A20000040000000000000002 /* FundseeWidgets */;
 		};
+		E4B5A67130830C7A0091C213 /* Exceptions for "Fundsee" folder in "Fundsee" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A10000060000000000000001 /* Fundsee */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A10000010000000000000001 /* Fundsee */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E4B5A67130830C7A0091C213 /* Exceptions for "Fundsee" folder in "Fundsee" target */,
+			);
 			path = Fundsee;
 			sourceTree = "<group>";
 		};
@@ -365,6 +375,7 @@
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Fundsee/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Funds;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Funds sends you daily, weekly, and monthly budget reports.";
@@ -403,6 +414,7 @@
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Fundsee/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Funds;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserNotificationsUsageDescription = "Funds sends you daily, weekly, and monthly budget reports.";

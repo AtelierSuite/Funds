@@ -38,7 +38,11 @@ struct FundseeApp: App {
         do {
             return try ModelContainer(for: schema, configurations: [configuration])
         } catch {
-            let localConfiguration = ModelConfiguration(schema: schema, cloudKitDatabase: .none)
+            let localConfiguration = ModelConfiguration(
+                schema: schema,
+                groupContainer: .identifier(AppGroup.identifier),
+                cloudKitDatabase: .none
+            )
             do {
                 return try ModelContainer(for: schema, configurations: [localConfiguration])
             } catch {
