@@ -8,8 +8,13 @@ struct TodayBudgetProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<BudgetEntry>) -> Void) {
-        let refresh = Calendar.current.date(byAdding: .minute, value: 30, to: .now)
-            ?? Date.now.addingTimeInterval(1800)
-        completion(Timeline(entries: [makeTodayBudgetEntry()], policy: .after(refresh)))
+        let now = Date.now
+        let calendar = Calendar.current
+        let refresh = calendar.date(byAdding: .minute, value: 30, to: now) ?? now.addingTimeInterval(1800)
+        var entries = [makeTodayBudgetEntry(at: now)]
+        if let midnight = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) {
+            entries.append(makeTodayBudgetEntry(at: midnight))
+        }
+        completion(Timeline(entries: entries, policy: .after(refresh)))
     }
 }

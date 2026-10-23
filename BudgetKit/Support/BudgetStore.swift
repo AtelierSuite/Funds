@@ -2,6 +2,7 @@ import CoreData
 import Foundation
 import Observation
 import SwiftData
+import WidgetKit
 
 @MainActor
 @Observable
@@ -28,6 +29,7 @@ final class BudgetStore {
     func invalidate() {
         engines.removeAll()
         revision += 1
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     func engine(around date: Date = .now) -> BudgetEngine {

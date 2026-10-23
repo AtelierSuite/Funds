@@ -1,11 +1,10 @@
 import Foundation
 import SwiftData
 
-func makeTodayBudgetEntry() -> BudgetEntry {
+func makeTodayBudgetEntry(at today: Date = .now) -> BudgetEntry {
     do {
         let container = try AppGroup.readOnlyContainer()
         let context = ModelContext(container)
-        let today = Date.now
         let week = Calendar.current.dateInterval(of: .weekOfYear, for: today)
             ?? DateInterval(start: Calendar.current.startOfDay(for: today), duration: 7 * 86_400)
         let start = week.start
