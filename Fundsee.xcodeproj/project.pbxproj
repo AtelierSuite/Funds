@@ -35,6 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A30000030000000000000003 /* FundseeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FundseeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000040000000000000001 /* Fundsee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Fundsee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20000030000000000000002 /* FundseeWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FundseeWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -57,6 +58,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		A30000010000000000000003 /* FundseeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FundseeTests;
+			sourceTree = "<group>";
+		};
 		A10000010000000000000001 /* Fundsee */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -81,6 +87,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A30000060000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000050000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -104,6 +117,7 @@
 				A10000010000000000000001 /* Fundsee */,
 				A20000010000000000000002 /* BudgetKit */,
 				A20000020000000000000002 /* FundseeWidgets */,
+				A30000010000000000000003 /* FundseeTests */,
 				A10000030000000000000001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,6 +127,7 @@
 			children = (
 				A10000040000000000000001 /* Fundsee.app */,
 				A20000030000000000000002 /* FundseeWidgets.appex */,
+				A30000030000000000000003 /* FundseeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -164,6 +179,27 @@
 			productReference = A20000030000000000000002 /* FundseeWidgets.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		A30000040000000000000003 /* FundseeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A30000080000000000000003 /* Build configuration list for PBXNativeTarget "FundseeTests" */;
+			buildPhases = (
+				A30000050000000000000003 /* Sources */,
+				A30000060000000000000003 /* Frameworks */,
+				A30000070000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A20000010000000000000002 /* BudgetKit */,
+				A30000010000000000000003 /* FundseeTests */,
+			);
+			name = FundseeTests;
+			productName = FundseeTests;
+			productReference = A30000030000000000000003 /* FundseeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -199,11 +235,19 @@
 			targets = (
 				A10000060000000000000001 /* Fundsee */,
 				A20000040000000000000002 /* FundseeWidgets */,
+				A30000040000000000000003 /* FundseeTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A30000070000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000090000000000000001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -221,6 +265,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A30000050000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A10000080000000000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -502,6 +553,44 @@
 			};
 			name = Release;
 		};
+		A30000090000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YYM4Z6MU8F;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Fundsee.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A300000A0000000000000003 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YYM4Z6MU8F;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Fundsee.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -528,6 +617,15 @@
 			buildConfigurations = (
 				A20000090000000000000002 /* Debug */,
 				A200000A0000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A30000080000000000000003 /* Build configuration list for PBXNativeTarget "FundseeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A30000090000000000000003 /* Debug */,
+				A300000A0000000000000003 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
