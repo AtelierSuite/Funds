@@ -9,8 +9,7 @@ struct FundseeApp: App {
     @State private var store: BudgetStore
 
     init() {
-        let syncEnabled = UserDefaults.standard.object(forKey: "iCloudSyncEnabled") as? Bool ?? true
-        let container = Self.makeContainer(cloudSync: syncEnabled)
+        let container = SharedModelContainer.current
         _container = State(initialValue: container)
         _store = State(initialValue: BudgetStore(context: container.mainContext))
     }
@@ -27,13 +26,14 @@ struct FundseeApp: App {
             .modelContainer(container)
             .environment(store)
             .onChange(of: iCloudSyncEnabled) { _, enabled in
-                container = Self.makeContainer(cloudSync: enabled)
+                SharedModelContainer.current = Self.makeContainer(cloudSync: enabled)
+                container = SharedModelContainer.current
                 store = BudgetStore(context: container.mainContext)
             }
         }
     }
 
-    static func makeContainer(cloudSync: Bool) -> ModelContainer {
+    fileprivate static func makeContainer(cloudSync: Bool) -> ModelContainer {
         let schema = AppGroup.schema
         let configuration = ModelConfiguration(
             schema: schema,
@@ -55,4 +55,11 @@ struct FundseeApp: App {
             }
         }
     }
+}
+
+@MainActor
+enum SharedModelContainer {
+    static var current: ModelContainer = FundseeApp.makeContainer(
+        cloudSync: UserDefaults.standard.object(forKey: "iCloudSyncEnabled") as? Bool ?? true
+    )
 }
