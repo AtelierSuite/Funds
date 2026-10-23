@@ -214,36 +214,4 @@ struct BudgetEngine {
         }
         return result
     }
-
-    enum MonthStatus {
-        case onTrack, surplus, debt, upcoming
-
-        var title: String {
-            switch self {
-            case .onTrack: String(localized: "MonthStatus.OnTrack", defaultValue: "On Track")
-            case .surplus: String(localized: "MonthStatus.Surplus", defaultValue: "Surplus")
-            case .debt: String(localized: "MonthStatus.OverBudget", defaultValue: "Over Budget")
-            case .upcoming: String(localized: "MonthStatus.Upcoming", defaultValue: "Upcoming")
-            }
-        }
-    }
-
-    func status(forMonthContaining date: Date, today: Date = .now) -> MonthStatus {
-        let month = monthInterval(containing: date)
-        let now = day(today)
-        if month.start > now { return .upcoming }
-        let budget = monthBudget(containing: date)
-        let used = spent(in: month)
-        if month.end <= today {
-            return used > budget ? .debt : (used < budget ? .surplus : .onTrack)
-        }
-        let allDays = days(in: month)
-        let elapsed = allDays.filter { $0 <= now }
-        guard !allDays.isEmpty else { return .onTrack }
-        let prorated = budget * Decimal(elapsed.count) / Decimal(allDays.count)
-        let tolerance = prorated * Decimal(0.05)
-        if used > prorated + tolerance { return .debt }
-        if used < prorated - tolerance { return .surplus }
-        return .onTrack
-    }
 }
