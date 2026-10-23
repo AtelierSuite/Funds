@@ -17,39 +17,63 @@ enum DefaultData {
     static let categoryIcons = ["sunrise.fill", "takeoutbag.and.cup.and.straw.fill", "fork.knife", "cup.and.saucer.fill", "gamecontroller.fill"]
 
     struct TemplateSeed {
+        let id: String
         let name: String
         let iconName: String
     }
 
+    static let officeSeedID = "seed.office"
+    static let homeSeedID = "seed.home"
+    static let notWorkingSeedID = "seed.notWorking"
+
     static var templates: [TemplateSeed] {
         [
-            TemplateSeed(name: String(localized: "Seed.Template.Office", defaultValue: "Working from Office"), iconName: "building.2.fill"),
-            TemplateSeed(name: String(localized: "Seed.Template.Home", defaultValue: "Working from Home"), iconName: "house.fill"),
-            TemplateSeed(name: String(localized: "Seed.Template.NotWorking", defaultValue: "Not Working"), iconName: "sofa.fill"),
+            TemplateSeed(id: officeSeedID, name: String(localized: "Seed.Template.Office", defaultValue: "Working from Office"), iconName: "building.2.fill"),
+            TemplateSeed(id: homeSeedID, name: String(localized: "Seed.Template.Home", defaultValue: "Working from Home"), iconName: "house.fill"),
+            TemplateSeed(id: notWorkingSeedID, name: String(localized: "Seed.Template.NotWorking", defaultValue: "Not Working"), iconName: "sofa.fill"),
         ]
     }
 
-    private enum Seed: Int {
-        case office = 0, home = 1, notWorking = 2
+    static func seedCategoryID(templateID: String, index: Int) -> String {
+        "\(templateID)/\(index)"
+    }
+
+    @MainActor
+    @discardableResult
+    static func insertSeedTemplates(context: ModelContext) -> [BudgetTemplate] {
+        let names = categoryNames
+        return templates.map { seed in
+            let template = BudgetTemplate(name: seed.name, iconName: seed.iconName)
+            template.uuid = seed.id
+            context.insert(template)
+            for (index, name) in names.enumerated() {
+                let category = TemplateCategory(name: name, amount: 0, sortOrder: index, iconName: categoryIcons[index])
+                category.uuid = seedCategoryID(templateID: seed.id, index: index)
+                category.template = template
+                context.insert(category)
+            }
+            return template
+        }
+    }
+
+    @MainActor
+    static func insertDefaultSettings(context: ModelContext, seeded: Bool) -> PlanSettings {
+        let settings = PlanSettings()
+        if seeded {
+            settings.setTemplateUUID(notWorkingSeedID, forWeekday: 1)
+            for weekday in 2...6 {
+                settings.setTemplateUUID(officeSeedID, forWeekday: weekday)
+            }
+            settings.setTemplateUUID(notWorkingSeedID, forWeekday: 7)
+        }
+        context.insert(settings)
+        return settings
     }
 
     @MainActor
     static func seedIfNeeded(context: ModelContext) {
         let templateCount = (try? context.fetchCount(FetchDescriptor<BudgetTemplate>())) ?? 0
-        var seeded: [BudgetTemplate] = []
-        if templateCount == 0 {
-            let names = categoryNames
-            for seed in templates {
-                let template = BudgetTemplate(name: seed.name, iconName: seed.iconName)
-                context.insert(template)
-                for (index, name) in names.enumerated() {
-                    let category = TemplateCategory(name: name, amount: 0, sortOrder: index, iconName: categoryIcons[index])
-                    category.template = template
-                    context.insert(category)
-                }
-                seeded.append(template)
-            }
-        }
+        let seeded = templateCount == 0 && !insertSeedTemplates(context: context).isEmpty
 
         let defaultIcons = Dictionary(uniqueKeysWithValues: zip(originalCategoryNames, categoryIcons))
         let allCategories = (try? context.fetch(FetchDescriptor<TemplateCategory>())) ?? []
@@ -63,19 +87,10 @@ enum DefaultData {
 
         let settingsCount = (try? context.fetchCount(FetchDescriptor<PlanSettings>())) ?? 0
         if settingsCount == 0 {
-            let settings = PlanSettings()
-            if seeded.indices.contains(Seed.notWorking.rawValue) {
-                let office = seeded[Seed.office.rawValue]
-                let off = seeded[Seed.notWorking.rawValue]
-                settings.setTemplateUUID(off.uuid, forWeekday: 1)
-                for weekday in 2...6 {
-                    settings.setTemplateUUID(office.uuid, forWeekday: weekday)
-                }
-                settings.setTemplateUUID(off.uuid, forWeekday: 7)
-            }
-            context.insert(settings)
+            insertDefaultSettings(context: context, seeded: seeded)
         }
         try? context.save()
+        SyncDeduplication.mergeDuplicates(context: context)
     }
 
     static func legacyCategoryID(templateUUID: String, sortOrder: Int, name: String) -> String {
@@ -103,7 +118,7 @@ enum DefaultData {
             templates: templates,
             overrides: (try? context.fetch(FetchDescriptor<DayOverride>())) ?? [],
             entries: [],
-            settings: (try? context.fetch(FetchDescriptor<PlanSettings>()))?.first
+            settings: ((try? context.fetch(FetchDescriptor<PlanSettings>())) ?? []).primary
         )
         for entry in entries {
             let candidates = (engine.template(for: entry.dayKey).map { [$0] } ?? []) + templates
@@ -137,7 +152,7 @@ enum DefaultData {
             }
         }
 
-        let settings = (try? context.fetch(FetchDescriptor<PlanSettings>()))?.first
+        let settings = ((try? context.fetch(FetchDescriptor<PlanSettings>())) ?? []).primary
         let engine = BudgetEngine(templates: templates, overrides: [], entries: [], settings: settings)
 
         let calendar = Calendar.current

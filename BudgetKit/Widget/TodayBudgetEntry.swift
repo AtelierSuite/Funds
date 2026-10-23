@@ -13,7 +13,7 @@ func makeTodayBudgetEntry(at today: Date = .now) -> BudgetEntry {
             templates: try context.fetch(FetchDescriptor<BudgetTemplate>()),
             overrides: try context.fetch(FetchDescriptor<DayOverride>(predicate: #Predicate { $0.dayKey >= start && $0.dayKey < end })),
             entries: try context.fetch(FetchDescriptor<SpendEntry>(predicate: #Predicate { $0.dayKey >= start && $0.dayKey < end })),
-            settings: try context.fetch(FetchDescriptor<PlanSettings>()).first
+            settings: try context.fetch(FetchDescriptor<PlanSettings>()).primary
         )
         let categories = (engine.template(for: today)?.sortedCategories ?? []).map {
             CategorySnapshot(

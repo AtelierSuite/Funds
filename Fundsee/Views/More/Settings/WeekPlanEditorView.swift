@@ -13,7 +13,7 @@ struct WeekPlanEditorView: View {
     var body: some View {
         List {
             Section {
-                if let settings = allSettings.first {
+                if let settings = allSettings.primary {
                     ForEach(orderedWeekdays(), id: \.self) { weekday in
                         Picker(calendar.weekdaySymbols[weekday - 1], selection: binding(for: weekday, settings: settings)) {
                             Text("Common.None").tag("")

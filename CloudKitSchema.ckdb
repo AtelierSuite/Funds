@@ -82,6 +82,7 @@ DEFINE SCHEMA
         CD_weekdayTemplateUUIDs  BYTES,
         CD_weeklyOverallBudget   STRING,
         CD_monthlyOverallBudget  STRING,
+        CD_createdAt    TIMESTAMP,
         CD_carryoverRaw          STRING,
         GRANT WRITE TO "_creator",
         GRANT CREATE TO "_icloud",

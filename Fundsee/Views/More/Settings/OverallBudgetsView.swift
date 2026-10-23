@@ -7,7 +7,7 @@ struct OverallBudgetsView: View {
 
     var body: some View {
         List {
-            if let settings = allSettings.first {
+            if let settings = allSettings.primary {
                 @Bindable var settings = settings
                 Section {
                     TextField("Common.Amount", value: $settings.weeklyOverallBudget, format: .number)

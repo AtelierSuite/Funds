@@ -7,7 +7,7 @@ struct OnboardingOverallBudgetsSection: View {
     @Query private var allSettings: [PlanSettings]
 
     var body: some View {
-        if let settings = allSettings.first {
+        if let settings = allSettings.primary {
             @Bindable var settings = settings
             Section {
                 LabeledContent("Onboarding.Extras.Weekly") {

@@ -7,7 +7,7 @@ struct CarryoverSettingsView: View {
 
     var body: some View {
         List {
-            if let settings = allSettings.first {
+            if let settings = allSettings.primary {
                 Section {
                     ForEach(CarryoverBehavior.allCases) { behavior in
                         Button {

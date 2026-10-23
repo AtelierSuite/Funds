@@ -74,7 +74,7 @@ struct BudgetEngine {
         var categoriesByUUID: [String: TemplateCategory] = [:]
         var categoryIDsByTemplate: [ObjectIdentifier: Set<String>] = [:]
         for template in templates {
-            if templatesByUUID[template.uuid] == nil {
+            if templatesByUUID[template.uuid].map({ BudgetTemplate.precedes(template, $0) }) ?? true {
                 templatesByUUID[template.uuid] = template
             }
             let categories = template.sortedCategories

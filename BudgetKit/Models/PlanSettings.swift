@@ -7,8 +7,11 @@ final class PlanSettings {
     var weeklyOverallBudget: Decimal = 0
     var monthlyOverallBudget: Decimal = 0
     var carryoverRaw: String = CarryoverBehavior.leaveAsIs.rawValue
+    var createdAt: Date = Date.distantPast
 
-    init() {}
+    init() {
+        createdAt = .now
+    }
 
     var carryover: CarryoverBehavior {
         get { CarryoverBehavior(rawValue: carryoverRaw) ?? .leaveAsIs }

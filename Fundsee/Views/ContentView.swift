@@ -33,7 +33,7 @@ struct ContentView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
-                store.invalidate()
+                store.refresh()
                 let engine = store.engine()
                 Task { await NotificationService.reschedule(engine: engine) }
             } else {

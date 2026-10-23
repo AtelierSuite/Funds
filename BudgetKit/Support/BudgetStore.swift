@@ -16,14 +16,23 @@ final class BudgetStore {
 
     init(context: ModelContext) {
         self.context = context
-        for name in [ModelContext.didSave, .NSPersistentStoreRemoteChange] {
-            Task { [weak self] in
-                for await _ in NotificationCenter.default.notifications(named: name) {
-                    guard let self else { return }
-                    self.invalidate()
-                }
+        Task { [weak self] in
+            for await _ in NotificationCenter.default.notifications(named: ModelContext.didSave) {
+                guard let self else { return }
+                self.invalidate()
             }
         }
+        Task { [weak self] in
+            for await _ in NotificationCenter.default.notifications(named: .NSPersistentStoreRemoteChange) {
+                guard let self else { return }
+                self.refresh()
+            }
+        }
+    }
+
+    func refresh() {
+        SyncDeduplication.mergeDuplicates(context: context)
+        invalidate()
     }
 
     func invalidate() {
@@ -79,7 +88,7 @@ final class BudgetStore {
             templates: (try? context.fetch(FetchDescriptor<BudgetTemplate>())) ?? [],
             overrides: (try? context.fetch(overrides)) ?? [],
             entries: (try? context.fetch(entries)) ?? [],
-            settings: (try? context.fetch(FetchDescriptor<PlanSettings>()))?.first,
+            settings: ((try? context.fetch(FetchDescriptor<PlanSettings>())) ?? []).primary,
             calendar: calendar
         )
     }
