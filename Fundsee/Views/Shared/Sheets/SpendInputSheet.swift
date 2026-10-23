@@ -5,23 +5,38 @@ struct SpendInputSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
 
+    @Environment(BudgetStore.self) private var store
+
     let date: Date
     let categoryName: String
-    let recentAmounts: [Decimal]
-    var scope: SpendScope = .day
-    var period: DateInterval?
+    let scope: SpendScope
+    let period: DateInterval?
 
-    @Query(sort: \SpendEntry.timestamp, order: .reverse) private var allEntries: [SpendEntry]
+    @Query private var periodEntries: [SpendEntry]
 
     @State private var amount: Decimal?
+    @State private var recentAmounts: [Decimal] = []
     @FocusState private var amountFocused: Bool
 
+    init(date: Date, categoryName: String, scope: SpendScope = .day, period: DateInterval? = nil) {
+        self.date = date
+        self.categoryName = categoryName
+        self.scope = scope
+        self.period = period
+        let calendar = Calendar.current
+        let dayStart = calendar.startOfDay(for: date)
+        let start = period?.start ?? dayStart
+        let end = period?.end ?? calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart
+        let scopeRaw = scope.rawValue
+        _periodEntries = Query(
+            filter: #Predicate { $0.dayKey >= start && $0.dayKey < end && $0.scopeRaw == scopeRaw },
+            sort: \.timestamp,
+            order: .reverse
+        )
+    }
+
     private var recordedEntries: [SpendEntry] {
-        allEntries.filter { entry in
-            guard entry.categoryName == categoryName, entry.scope == scope else { return false }
-            guard let period else { return Calendar.current.isDate(entry.dayKey, inSameDayAs: date) }
-            return period.contains(entry.dayKey) && entry.dayKey < period.end
-        }
+        periodEntries.filter { $0.categoryName == categoryName }
     }
 
     private var recordedTitle: String {
@@ -85,7 +100,10 @@ struct SpendInputSheet: View {
                     .disabled((amount ?? 0) <= 0)
                 }
             }
-            .onAppear { amountFocused = true }
+            .onAppear {
+                amountFocused = true
+                recentAmounts = store.recentAmounts(category: categoryName)
+            }
         }
         .presentationDetents([.medium, .large])
     }

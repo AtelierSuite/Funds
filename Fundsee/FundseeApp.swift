@@ -6,10 +6,13 @@ struct FundseeApp: App {
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled = true
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var container: ModelContainer
+    @State private var store: BudgetStore
 
     init() {
         let syncEnabled = UserDefaults.standard.object(forKey: "iCloudSyncEnabled") as? Bool ?? true
-        _container = State(initialValue: Self.makeContainer(cloudSync: syncEnabled))
+        let container = Self.makeContainer(cloudSync: syncEnabled)
+        _container = State(initialValue: container)
+        _store = State(initialValue: BudgetStore(context: container.mainContext))
     }
 
     var body: some Scene {
@@ -22,8 +25,10 @@ struct FundseeApp: App {
                 }
             }
             .modelContainer(container)
+            .environment(store)
             .onChange(of: iCloudSyncEnabled) { _, enabled in
                 container = Self.makeContainer(cloudSync: enabled)
+                store = BudgetStore(context: container.mainContext)
             }
         }
     }

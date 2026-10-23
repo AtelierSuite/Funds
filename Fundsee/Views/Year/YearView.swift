@@ -3,16 +3,11 @@ import SwiftData
 import SwiftUI
 
 struct YearView: View {
-    @Query private var templates: [BudgetTemplate]
-    @Query private var overrides: [DayOverride]
-    @Query private var entries: [SpendEntry]
-    @Query private var allSettings: [PlanSettings]
+    @Environment(BudgetStore.self) private var store
 
     @State private var yearOffset = 0
 
-    private var engine: BudgetEngine {
-        BudgetEngine(templates: templates, overrides: overrides, entries: entries, settings: allSettings.first)
-    }
+    private var engine: BudgetEngine { store.engine(around: referenceDate) }
 
     private var referenceDate: Date {
         Calendar.current.date(byAdding: .year, value: yearOffset, to: .now) ?? .now

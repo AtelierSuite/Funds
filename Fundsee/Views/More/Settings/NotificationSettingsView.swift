@@ -9,10 +9,7 @@ struct NotificationSettingsView: View {
     @AppStorage("notifyWeekly") private var notifyWeekly = false
     @AppStorage("notifyMonthly") private var notifyMonthly = false
 
-    @Query private var templates: [BudgetTemplate]
-    @Query private var overrides: [DayOverride]
-    @Query private var entries: [SpendEntry]
-    @Query private var allSettings: [PlanSettings]
+    @Environment(BudgetStore.self) private var store
 
     var body: some View {
         List {
@@ -50,7 +47,7 @@ struct NotificationSettingsView: View {
     }
 
     private func reschedule() {
-        let engine = BudgetEngine(templates: templates, overrides: overrides, entries: entries, settings: allSettings.first)
+        let engine = store.engine()
         Task {
             if notifyDaily || notifyWeekly || notifyMonthly {
                 _ = await NotificationService.requestAuthorization()

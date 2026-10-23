@@ -2,18 +2,13 @@ import SwiftData
 import SwiftUI
 
 struct TodayView: View {
-    @Query private var templates: [BudgetTemplate]
-    @Query private var overrides: [DayOverride]
-    @Query(sort: \SpendEntry.timestamp, order: .reverse) private var entries: [SpendEntry]
-    @Query private var allSettings: [PlanSettings]
+    @Environment(BudgetStore.self) private var store
 
     @State private var spendTarget: SpendTarget?
     @State private var showingTemplatePicker = false
     @Namespace private var cardZoom
 
-    private var engine: BudgetEngine {
-        BudgetEngine(templates: templates, overrides: overrides, entries: entries, settings: allSettings.first)
-    }
+    private var engine: BudgetEngine { store.engine(around: today) }
 
     private var today: Date { Calendar.current.startOfDay(for: .now) }
 
@@ -36,7 +31,6 @@ struct TodayView: View {
                 SpendInputSheet(
                     date: today,
                     categoryName: target.name,
-                    recentAmounts: engine.recentAmounts(category: target.name),
                     scope: target.scope,
                     period: target.period
                 )

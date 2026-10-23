@@ -5,17 +5,9 @@ import WidgetKit
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
-
-    @Query private var templates: [BudgetTemplate]
-    @Query private var overrides: [DayOverride]
-    @Query private var entries: [SpendEntry]
-    @Query private var allSettings: [PlanSettings]
+    @Environment(BudgetStore.self) private var store
 
     @State private var selectedTab = UserDefaults.standard.string(forKey: "initialTab") ?? "today"
-
-    private var engine: BudgetEngine {
-        BudgetEngine(templates: templates, overrides: overrides, entries: entries, settings: allSettings.first)
-    }
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -41,7 +33,8 @@ struct ContentView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
-                let engine = self.engine
+                store.invalidate()
+                let engine = store.engine()
                 Task { await NotificationService.reschedule(engine: engine) }
             } else {
                 WidgetCenter.shared.reloadAllTimelines()
@@ -51,6 +44,11 @@ struct ContentView: View {
 }
 
 #Preview {
+    let container = try! ModelContainer(
+        for: AppGroup.schema,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+    )
     ContentView()
-        .modelContainer(for: [BudgetTemplate.self, TemplateCategory.self, DayOverride.self, SpendEntry.self, PlanSettings.self], inMemory: true)
+        .modelContainer(container)
+        .environment(BudgetStore(context: container.mainContext))
 }

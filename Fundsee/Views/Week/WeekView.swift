@@ -3,10 +3,7 @@ import SwiftData
 import SwiftUI
 
 struct WeekView: View {
-    @Query private var templates: [BudgetTemplate]
-    @Query private var overrides: [DayOverride]
-    @Query private var entries: [SpendEntry]
-    @Query private var allSettings: [PlanSettings]
+    @Environment(BudgetStore.self) private var store
 
     @State private var weekOffset = 0
     @State private var stripDay: Date?
@@ -14,9 +11,7 @@ struct WeekView: View {
     @Namespace private var cardZoom
     @Namespace private var daySelection
 
-    private var engine: BudgetEngine {
-        BudgetEngine(templates: templates, overrides: overrides, entries: entries, settings: allSettings.first)
-    }
+    private var engine: BudgetEngine { store.engine(around: referenceDate) }
 
     private var referenceDate: Date {
         Calendar.current.date(byAdding: .weekOfYear, value: weekOffset, to: .now) ?? .now
@@ -48,7 +43,6 @@ struct WeekView: View {
                 SpendInputSheet(
                     date: shownDay,
                     categoryName: target.name,
-                    recentAmounts: engine.recentAmounts(category: target.name),
                     scope: target.scope,
                     period: target.period
                 )

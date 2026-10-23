@@ -140,9 +140,9 @@ struct SpendingTests {
         fixture.spend(9, on: day, at: fixture.date(2026, 6, 2, hour: 11))
         fixture.spend(1, on: day, at: fixture.date(2026, 6, 2, hour: 7))
         fixture.spend(50, on: day, category: "Coffee", at: fixture.date(2026, 6, 2, hour: 12))
-        let engine = try fixture.engine()
-        #expect(engine.recentAmounts(category: "Lunch") == [9, 4, 6])
-        #expect(engine.recentAmounts(category: "Lunch", limit: 0) == [])
+        let lunch = try fixture.engine().entries.filter { $0.categoryName == "Lunch" }
+        #expect(BudgetEngine.recentAmounts(in: lunch) == [9, 4, 6])
+        #expect(BudgetEngine.recentAmounts(in: lunch, limit: 0) == [])
     }
 }
 

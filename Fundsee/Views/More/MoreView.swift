@@ -4,9 +4,7 @@ import SwiftUI
 struct MoreView: View {
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled = true
 
-    @Query private var templates: [BudgetTemplate]
-    @Query private var entries: [SpendEntry]
-    @Query private var allSettings: [PlanSettings]
+    @Environment(\.modelContext) private var modelContext
 
     @State private var exportURL: URL?
     @State private var templatesExportURL: URL?
@@ -55,10 +53,10 @@ struct MoreView: View {
 
                 Section("More.Section.Export") {
                     Button("More.ExportSpending") {
-                        exportURL = try? CSVExporter.exportEntries(entries)
+                        exportURL = try? CSVExporter.exportEntries(modelContext.fetch(FetchDescriptor<SpendEntry>()))
                     }
                     Button("More.ExportTemplates") {
-                        templatesExportURL = try? CSVExporter.exportTemplates(templates)
+                        templatesExportURL = try? CSVExporter.exportTemplates(modelContext.fetch(FetchDescriptor<BudgetTemplate>()))
                     }
                 }
 

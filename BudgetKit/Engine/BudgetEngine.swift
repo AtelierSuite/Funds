@@ -7,8 +7,35 @@ struct BudgetEngine {
     var settings: PlanSettings?
     var calendar: Calendar = .current
     private var entriesByDay: [Date: [SpendEntry]]
+    private var totalsByDay: [Date: ScopeTotals]
     private var overridesByDay: [Date: DayOverride]
     private var templatesByUUID: [String: BudgetTemplate]
+    private var templateTotals: [ObjectIdentifier: Decimal]
+    private var iconsByCategoryName: [String: String]
+
+    private struct ScopeTotals {
+        var day: Decimal = 0
+        var week: Decimal = 0
+        var month: Decimal = 0
+
+        var all: Decimal { day + week + month }
+
+        subscript(scope: SpendScope) -> Decimal {
+            switch scope {
+            case .day: day
+            case .week: week
+            case .month: month
+            }
+        }
+
+        mutating func add(_ amount: Decimal, scope: SpendScope) {
+            switch scope {
+            case .day: day += amount
+            case .week: week += amount
+            case .month: month += amount
+            }
+        }
+    }
 
     init(templates: [BudgetTemplate], overrides: [DayOverride], entries: [SpendEntry], settings: PlanSettings?, calendar: Calendar = .current) {
         self.templates = templates
@@ -16,15 +43,39 @@ struct BudgetEngine {
         self.entries = entries
         self.settings = settings
         self.calendar = calendar
-        self.entriesByDay = Dictionary(grouping: entries) { calendar.startOfDay(for: $0.dayKey) }
-        self.overridesByDay = [:]
+
+        var entriesByDay: [Date: [SpendEntry]] = [:]
+        var totalsByDay: [Date: ScopeTotals] = [:]
+        for entry in entries {
+            let day = calendar.startOfDay(for: entry.dayKey)
+            entriesByDay[day, default: []].append(entry)
+            totalsByDay[day, default: ScopeTotals()].add(entry.amount, scope: entry.scope)
+        }
+        self.entriesByDay = entriesByDay
+        self.totalsByDay = totalsByDay
+
+        var overridesByDay: [Date: DayOverride] = [:]
         for override in overrides {
-            self.overridesByDay[calendar.startOfDay(for: override.dayKey)] = override
+            overridesByDay[calendar.startOfDay(for: override.dayKey)] = override
         }
-        self.templatesByUUID = [:]
-        for template in templates where self.templatesByUUID[template.uuid] == nil {
-            self.templatesByUUID[template.uuid] = template
+        self.overridesByDay = overridesByDay
+
+        var templatesByUUID: [String: BudgetTemplate] = [:]
+        var templateTotals: [ObjectIdentifier: Decimal] = [:]
+        var iconsByCategoryName: [String: String] = [:]
+        for template in templates {
+            if templatesByUUID[template.uuid] == nil {
+                templatesByUUID[template.uuid] = template
+            }
+            let categories = template.sortedCategories
+            templateTotals[ObjectIdentifier(template)] = categories.reduce(0) { $0 + $1.amount }
+            for category in categories where iconsByCategoryName[category.name] == nil {
+                iconsByCategoryName[category.name] = category.iconName
+            }
         }
+        self.templatesByUUID = templatesByUUID
+        self.templateTotals = templateTotals
+        self.iconsByCategoryName = iconsByCategoryName
     }
 
     var carryover: CarryoverBehavior { settings?.carryover ?? .leaveAsIs }
@@ -78,12 +129,22 @@ struct BudgetEngine {
     }
 
     func entries(in interval: DateInterval) -> [SpendEntry] {
-        days(in: interval).flatMap { entriesByDay[$0] ?? [] }
-            .filter { $0.dayKey >= interval.start && $0.dayKey < interval.end }
+        days(within: interval).flatMap { entriesByDay[$0] ?? [] }
+    }
+
+    private func days(within interval: DateInterval) -> [Date] {
+        days(in: interval).filter { $0 >= interval.start }
+    }
+
+    private func total(in interval: DateInterval, _ amount: (ScopeTotals) -> Decimal) -> Decimal {
+        days(within: interval).reduce(0) { sum, day in
+            guard let totals = totalsByDay[day] else { return sum }
+            return sum + amount(totals)
+        }
     }
 
     func spent(on date: Date) -> Decimal {
-        entries(on: date).reduce(0) { $0 + $1.amount }
+        totalsByDay[day(date)]?.day ?? 0
     }
 
     func spent(on date: Date, category: String) -> Decimal {
@@ -91,23 +152,19 @@ struct BudgetEngine {
     }
 
     func spent(in interval: DateInterval) -> Decimal {
-        entries(in: interval).reduce(0) { $0 + $1.amount }
+        total(in: interval) { $0.all }
     }
 
     func spent(in interval: DateInterval, scope: SpendScope) -> Decimal {
-        entries(in: interval).filter { $0.scope == scope }.reduce(0) { $0 + $1.amount }
+        total(in: interval) { $0[scope] }
     }
 
     func weekSpent(in week: DateInterval) -> Decimal {
-        entries(in: week).filter { $0.scope != .month }.reduce(0) { $0 + $1.amount }
+        total(in: week) { $0.day + $0.week }
     }
 
     func spent(in interval: DateInterval, category: String) -> Decimal {
         entries(in: interval).filter { $0.categoryName == category }.reduce(0) { $0 + $1.amount }
-    }
-
-    func spentByCategory(in interval: DateInterval) -> [(name: String, amount: Decimal)] {
-        breakdown(of: entries(in: interval))
     }
 
     func spentByCategory(in interval: DateInterval, scope: SpendScope) -> [(name: String, amount: Decimal)] {
@@ -129,22 +186,15 @@ struct BudgetEngine {
     }
 
     func categoryIconName(_ name: String) -> String? {
-        for template in templates {
-            if let match = template.sortedCategories.first(where: { $0.name == name }) {
-                return match.iconName
-            }
-        }
-        return nil
+        iconsByCategoryName[name]
     }
 
-    func recentAmounts(category: String, limit: Int = 3) -> [Decimal] {
+    static func recentAmounts(in entries: [SpendEntry], limit: Int = 3) -> [Decimal] {
         guard limit > 0 else { return [] }
         var seen: [Decimal] = []
-        for entry in entries.filter({ $0.categoryName == category }).sorted(by: { $0.timestamp > $1.timestamp }) {
-            if !seen.contains(entry.amount) {
-                seen.append(entry.amount)
-                if seen.count == limit { break }
-            }
+        for entry in entries.sorted(by: { $0.timestamp > $1.timestamp }) where !seen.contains(entry.amount) {
+            seen.append(entry.amount)
+            if seen.count == limit { break }
         }
         return seen
     }
@@ -152,7 +202,8 @@ struct BudgetEngine {
     // MARK: - Budgets
 
     func baseBudget(for date: Date) -> Decimal {
-        template(for: date)?.total ?? 0
+        guard let template = template(for: date) else { return 0 }
+        return templateTotals[ObjectIdentifier(template)] ?? template.total
     }
 
     func effectiveBudget(for date: Date) -> Decimal {

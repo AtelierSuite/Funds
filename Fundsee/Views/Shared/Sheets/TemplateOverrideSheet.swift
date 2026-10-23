@@ -7,21 +7,18 @@ struct TemplateOverrideSheet: View {
 
     let initialDate: Date
 
-    @Query private var templates: [BudgetTemplate]
-    @Query private var overrides: [DayOverride]
-    @Query private var allSettings: [PlanSettings]
+    @Environment(BudgetStore.self) private var store
+    @Query(sort: \BudgetTemplate.createdAt) private var templates: [BudgetTemplate]
 
     private var date: Date { initialDate }
 
-    private var engine: BudgetEngine {
-        BudgetEngine(templates: templates, overrides: overrides, entries: [], settings: allSettings.first)
-    }
+    private var engine: BudgetEngine { store.engine(around: date) }
 
     var body: some View {
         NavigationStack {
             List {
                 Section("TemplateOverride.Section.Template") {
-                    ForEach(templates.sorted(by: { $0.createdAt < $1.createdAt })) { template in
+                    ForEach(templates) { template in
                         Button {
                             apply(template)
                         } label: {
@@ -69,7 +66,11 @@ struct TemplateOverrideSheet: View {
     }
 
     private func removeOverride() {
-        for override in overrides where Calendar.current.isDate(override.dayKey, inSameDayAs: date) {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: date)
+        let end = calendar.date(byAdding: .day, value: 1, to: start) ?? start
+        let descriptor = FetchDescriptor<DayOverride>(predicate: #Predicate { $0.dayKey >= start && $0.dayKey < end })
+        for override in (try? modelContext.fetch(descriptor)) ?? [] {
             modelContext.delete(override)
         }
         try? modelContext.save()
