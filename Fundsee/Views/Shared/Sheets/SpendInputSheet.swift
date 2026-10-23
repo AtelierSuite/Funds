@@ -66,15 +66,27 @@ struct SpendInputSheet: View {
                 if !recordedEntries.isEmpty {
                     Section(recordedTitle) {
                         ForEach(recordedEntries) { entry in
-                            HStack {
-                                Text(period == nil
-                                     ? entry.timestamp.formatted(date: .omitted, time: .shortened)
-                                     : entry.dayKey.formatted(date: .abbreviated, time: .omitted))
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                Spacer()
-                                Text(entry.amount.currencyString)
-                                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                            NavigationLink {
+                                SpendEntryEditorView(entry: entry)
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(period == nil
+                                             ? entry.timestamp.formatted(date: .omitted, time: .shortened)
+                                             : entry.dayKey.formatted(date: .abbreviated, time: .omitted))
+                                            .font(.subheadline)
+                                            .foregroundStyle(.secondary)
+                                        if !entry.note.isEmpty {
+                                            Text(entry.note)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                                .lineLimit(2)
+                                        }
+                                    }
+                                    Spacer()
+                                    Text(entry.amount.currencyString)
+                                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                }
                             }
                             .swipeActions(edge: .trailing) {
                                 Button("Common.Delete", systemImage: "trash", role: .destructive) {

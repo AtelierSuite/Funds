@@ -13,6 +13,7 @@ final class SpendEntry {
     var categoryID: String = ""
     var amount: Decimal = 0
     var scopeRaw: String = SpendScope.day.rawValue
+    var note: String = ""
 
     init(dayKey: Date, categoryName: String, categoryID: String = "", amount: Decimal, scope: SpendScope = .day) {
         self.timestamp = .now

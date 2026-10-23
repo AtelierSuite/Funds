@@ -6,7 +6,7 @@ enum CSVExporter {
         for category in categories where !category.uuid.isEmpty {
             namesByID[category.uuid] = category.name
         }
-        var csv = "Date,Time,Category,Amount,Currency\n"
+        var csv = "Date,Time,Category,Amount,Currency,Note\n"
         let currency = Locale.current.currency?.identifier ?? "USD"
         let dateFormat = Date.FormatStyle(date: .numeric, time: .omitted).locale(Locale(identifier: "en_US_POSIX"))
         let timeFormat = Date.FormatStyle(date: .omitted, time: .standard).locale(Locale(identifier: "en_US_POSIX"))
@@ -17,6 +17,7 @@ enum CSVExporter {
                 escape(namesByID[entry.categoryID] ?? entry.categoryName),
                 "\(entry.amount)",
                 currency,
+                escape(entry.note),
             ]
             csv += fields.joined(separator: ",") + "\n"
         }
