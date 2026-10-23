@@ -220,6 +220,29 @@ struct CarryoverTests {
         #expect(engine.weekBudget(containing: fixture.date(2026, 6, 10)) == 110)
     }
 
+    @Test func monthScopedSpendingDoesNotEatIntoNextWeek() throws {
+        let fixture = try BudgetFixture()
+        fixture.settings.carryover = .nextWeek
+        fixture.settings.monthlyOverallBudget = 200
+        fixture.spend(100, on: fixture.date(2026, 6, 2))
+        fixture.spend(150, on: fixture.date(2026, 6, 3), category: "Monthly", scope: .month)
+        let engine = try fixture.engine()
+        #expect(engine.weekBudget(containing: fixture.date(2026, 6, 10)) == 130)
+    }
+
+    @Test func weekSpentLeavesOutMonthScope() throws {
+        let fixture = try BudgetFixture()
+        let day = fixture.date(2026, 6, 2)
+        fixture.spend(10, on: day)
+        fixture.spend(20, on: day, category: "Weekly", scope: .week)
+        fixture.spend(40, on: day, category: "Monthly", scope: .month)
+        fixture.spend(80, on: fixture.date(2026, 6, 8))
+        let engine = try fixture.engine()
+        let week = engine.weekInterval(containing: day)
+        #expect(engine.weekSpent(in: week) == 30)
+        #expect(engine.spent(in: week) == 70)
+    }
+
     @Test func nextWeekReachesBackExactlyOneWeek() throws {
         let fixture = try BudgetFixture()
         fixture.settings.carryover = .nextWeek

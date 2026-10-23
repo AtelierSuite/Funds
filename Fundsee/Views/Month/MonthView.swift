@@ -242,7 +242,7 @@ struct MonthView: View {
         let engine = self.engine
         let week = shownWeek
         let budget = engine.weekBudget(containing: week.start, includeCarry: false)
-        let used = engine.spent(in: week)
+        let used = engine.weekSpent(in: week)
         return Section {
             VStack(spacing: 10) {
                 HStack {
@@ -268,7 +268,7 @@ struct MonthView: View {
             Chart {
                 ForEach(Array(weeks.enumerated()), id: \.offset) { index, week in
                     let budget = engine.weekBudget(containing: week.start, includeCarry: false)
-                    let used = engine.spent(in: week)
+                    let used = engine.weekSpent(in: week)
                     BarMark(
                         x: .value("Chart.Axis.Week", String(localized: "Month.Chart.WeekLabel", defaultValue: "W\(index + 1)")),
                         yStart: .value("Chart.Series.Budget", 0),

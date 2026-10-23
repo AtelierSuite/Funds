@@ -42,7 +42,7 @@ enum NotificationService {
             content.title = String(localized: "Notification.Weekly.Title", defaultValue: "Weekly Report")
             let week = engine.weekInterval(containing: .now)
             let budget = engine.weekBudget(containing: .now)
-            let used = engine.spent(in: week)
+            let used = engine.weekSpent(in: week)
             content.body = String(localized: "Notification.Weekly.Body", defaultValue: "This week: \(used.currencyString) of \(budget.currencyString) used. Tap for the full picture.")
             content.sound = .default
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)

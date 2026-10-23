@@ -98,6 +98,10 @@ struct BudgetEngine {
         entries(in: interval).filter { $0.scope == scope }.reduce(0) { $0 + $1.amount }
     }
 
+    func weekSpent(in week: DateInterval) -> Decimal {
+        entries(in: week).filter { $0.scope != .month }.reduce(0) { $0 + $1.amount }
+    }
+
     func spent(in interval: DateInterval, category: String) -> Decimal {
         entries(in: interval).filter { $0.categoryName == category }.reduce(0) { $0 + $1.amount }
     }
@@ -177,7 +181,7 @@ struct BudgetEngine {
         }
         let previousWeek = weekInterval(containing: previous)
         let previousBase = days(in: previousWeek).reduce(Decimal(0)) { $0 + baseBudget(for: $1) } + weeklyExtra
-        return base + (previousBase - spent(in: previousWeek))
+        return base + (previousBase - weekSpent(in: previousWeek))
     }
 
     func monthBudget(containing date: Date) -> Decimal {

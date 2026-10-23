@@ -61,7 +61,7 @@ struct WeekView: View {
         let engine = self.engine
         let week = engine.weekInterval(containing: referenceDate)
         let budget = engine.weekBudget(containing: referenceDate)
-        let used = engine.spent(in: week)
+        let used = engine.weekSpent(in: week)
         let carryover = budget - engine.weekBudget(containing: referenceDate, includeCarry: false)
         return Section {
             BudgetSummaryHeader(
