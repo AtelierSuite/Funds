@@ -10,12 +10,12 @@ struct TodayRemainingIntent: AppIntent {
         let context = SharedModelContainer.current.mainContext
         let remaining = BudgetStore.loadEngine(context: context, around: .now).remaining(for: .now)
         let dialog = remaining >= 0
-            ? IntentDialog(LocalizedStringResource(
-                "Intent.Remaining.Dialog.Left",
+            ? IntentDialog(stringLiteral: String(
+                localized: "Intent.Remaining.Dialog.Left",
                 defaultValue: "You have \(remaining.currencyString) left today."
             ))
-            : IntentDialog(LocalizedStringResource(
-                "Intent.Remaining.Dialog.Over",
+            : IntentDialog(stringLiteral: String(
+                localized: "Intent.Remaining.Dialog.Over",
                 defaultValue: "You're \((-remaining).currencyString) over today's budget."
             ))
         return .result(value: remaining.doubleValue, dialog: dialog)

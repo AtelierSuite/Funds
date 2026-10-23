@@ -37,13 +37,13 @@ struct LogSpendIntent: AppIntent {
         let logged = value.currencyString
         let name = category?.name ?? self.category.name
         if remaining >= 0 {
-            return .result(dialog: IntentDialog(LocalizedStringResource(
-                "Intent.LogSpend.Dialog.Left",
+            return .result(dialog: IntentDialog(stringLiteral: String(
+                localized: "Intent.LogSpend.Dialog.Left",
                 defaultValue: "Logged \(logged) for \(name). \(remaining.currencyString) left today."
             )))
         }
-        return .result(dialog: IntentDialog(LocalizedStringResource(
-            "Intent.LogSpend.Dialog.Over",
+        return .result(dialog: IntentDialog(stringLiteral: String(
+            localized: "Intent.LogSpend.Dialog.Over",
             defaultValue: "Logged \(logged) for \(name). You're \((-remaining).currencyString) over today."
         )))
     }
