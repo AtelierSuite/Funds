@@ -43,6 +43,7 @@ struct WeekView: View {
                 SpendInputSheet(
                     date: shownDay,
                     categoryName: target.name,
+                    categoryID: target.categoryID,
                     scope: target.scope,
                     period: target.period
                 )
@@ -132,9 +133,9 @@ struct WeekView: View {
             if let template = engine.template(for: shown) {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
                     ForEach(template.sortedCategories) { category in
-                        let categorySpent = engine.spent(on: shown, category: category.name)
+                        let categorySpent = engine.spent(on: shown, category: category)
                         Button {
-                            spendTarget = SpendTarget(name: category.name)
+                            spendTarget = SpendTarget(name: category.name, categoryID: category.uuid)
                         } label: {
                             CategoryGridCell(category: category, used: categorySpent)
                         }

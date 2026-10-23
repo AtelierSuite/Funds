@@ -79,6 +79,7 @@ struct MonthView: View {
                 SpendInputSheet(
                     date: entryDate,
                     categoryName: target.name,
+                    categoryID: target.categoryID,
                     scope: target.scope,
                     period: target.period
                 )

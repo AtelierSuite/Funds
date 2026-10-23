@@ -53,7 +53,10 @@ struct MoreView: View {
 
                 Section("More.Section.Export") {
                     Button("More.ExportSpending") {
-                        exportURL = try? CSVExporter.exportEntries(modelContext.fetch(FetchDescriptor<SpendEntry>()))
+                        exportURL = try? CSVExporter.exportEntries(
+                            modelContext.fetch(FetchDescriptor<SpendEntry>()),
+                            categories: modelContext.fetch(FetchDescriptor<TemplateCategory>())
+                        )
                     }
                     Button("More.ExportTemplates") {
                         templatesExportURL = try? CSVExporter.exportTemplates(modelContext.fetch(FetchDescriptor<BudgetTemplate>()))

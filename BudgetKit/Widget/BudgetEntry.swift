@@ -18,9 +18,9 @@ struct BudgetEntry: TimelineEntry {
         spent: 12,
         budget: 40,
         categories: [
-            CategorySnapshot(id: "Breakfast", iconName: "sunrise.fill", used: 4, amount: 6),
-            CategorySnapshot(id: "Lunch", iconName: "takeoutbag.and.cup.and.straw.fill", used: 8, amount: 14),
-            CategorySnapshot(id: "Dinner", iconName: "fork.knife", used: 0, amount: 16),
+            CategorySnapshot(id: "Breakfast", name: "Breakfast", iconName: "sunrise.fill", used: 4, amount: 6),
+            CategorySnapshot(id: "Lunch", name: "Lunch", iconName: "takeoutbag.and.cup.and.straw.fill", used: 8, amount: 14),
+            CategorySnapshot(id: "Dinner", name: "Dinner", iconName: "fork.knife", used: 0, amount: 16),
         ]
     )
 }

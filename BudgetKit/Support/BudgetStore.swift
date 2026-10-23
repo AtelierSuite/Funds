@@ -41,9 +41,19 @@ final class BudgetStore {
         return engine
     }
 
-    func recentAmounts(category: String, limit: Int = 3) -> [Decimal] {
+    func recentAmounts(categoryID: String?, name: String, scope: SpendScope = .day, limit: Int = 3) -> [Decimal] {
+        let scopeRaw = scope.rawValue
+        let id = categoryID ?? ""
+        let predicate: Predicate<SpendEntry>
+        if scope != .day {
+            predicate = #Predicate<SpendEntry> { $0.scopeRaw == scopeRaw }
+        } else if id.isEmpty {
+            predicate = #Predicate<SpendEntry> { $0.scopeRaw == scopeRaw && $0.categoryName == name }
+        } else {
+            predicate = #Predicate<SpendEntry> { $0.scopeRaw == scopeRaw && ($0.categoryID == id || $0.categoryName == name) }
+        }
         var descriptor = FetchDescriptor<SpendEntry>(
-            predicate: #Predicate { $0.categoryName == category },
+            predicate: predicate,
             sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
         )
         descriptor.fetchLimit = 50

@@ -52,7 +52,7 @@ struct TodayBudgetContentView: View {
                                 .symbolRenderingMode(.hierarchical)
                                 .foregroundStyle(CategoryIconPalette.color(for: category.iconName))
                                 .frame(width: 18)
-                            Text(category.id)
+                            Text(category.name)
                                 .font(.caption2)
                                 .lineLimit(1)
                             Spacer()

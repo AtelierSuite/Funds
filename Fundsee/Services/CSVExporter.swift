@@ -1,7 +1,11 @@
 import Foundation
 
 enum CSVExporter {
-    static func exportEntries(_ entries: [SpendEntry]) throws -> URL {
+    static func exportEntries(_ entries: [SpendEntry], categories: [TemplateCategory]) throws -> URL {
+        var namesByID: [String: String] = [:]
+        for category in categories where !category.uuid.isEmpty {
+            namesByID[category.uuid] = category.name
+        }
         var csv = "Date,Time,Category,Amount,Currency\n"
         let currency = Locale.current.currency?.identifier ?? "USD"
         let dateFormat = Date.FormatStyle(date: .numeric, time: .omitted).locale(Locale(identifier: "en_US_POSIX"))
@@ -10,7 +14,7 @@ enum CSVExporter {
             let fields = [
                 entry.dayKey.formatted(dateFormat),
                 entry.timestamp.formatted(timeFormat),
-                escape(entry.categoryName),
+                escape(namesByID[entry.categoryID] ?? entry.categoryName),
                 "\(entry.amount)",
                 currency,
             ]

@@ -18,9 +18,10 @@ func makeTodayBudgetEntry() -> BudgetEntry {
         )
         let categories = (engine.template(for: today)?.sortedCategories ?? []).map {
             CategorySnapshot(
-                id: $0.name,
+                id: $0.uuid.isEmpty ? $0.name : $0.uuid,
+                name: $0.name,
                 iconName: $0.iconName,
-                used: engine.spent(on: today, category: $0.name),
+                used: engine.spent(on: today, category: $0),
                 amount: $0.amount
             )
         }

@@ -10,6 +10,10 @@ final class BudgetFixture {
     let office: BudgetTemplate
     let home: BudgetTemplate
     let off: BudgetTemplate
+    var officeLunch: TemplateCategory!
+    var officeCoffee: TemplateCategory!
+    var homeLunch: TemplateCategory!
+    var offFun: TemplateCategory!
 
     init(firstWeekday: Int = 2) throws {
         var calendar = Calendar(identifier: .gregorian)
@@ -30,10 +34,10 @@ final class BudgetFixture {
         context.insert(off)
         context.insert(settings)
 
-        addCategory("Lunch", amount: 10, to: office)
-        addCategory("Coffee", amount: 5, to: office)
-        addCategory("Lunch", amount: 8, to: home)
-        addCategory("Fun", amount: 20, to: off)
+        officeLunch = addCategory("Lunch", amount: 10, to: office)
+        officeCoffee = addCategory("Coffee", amount: 5, to: office)
+        homeLunch = addCategory("Lunch", amount: 8, to: home)
+        offFun = addCategory("Fun", amount: 20, to: off)
 
         settings.setTemplateUUID(off.uuid, forWeekday: 1)
         for weekday in 2...6 {
@@ -63,6 +67,13 @@ final class BudgetFixture {
     func spend(_ amount: Decimal, on day: Date, category: String = "Lunch", scope: SpendScope = .day, at timestamp: Date? = nil) -> SpendEntry {
         let entry = SpendEntry(dayKey: day, categoryName: category, amount: amount, scope: scope)
         if let timestamp { entry.timestamp = timestamp }
+        context.insert(entry)
+        return entry
+    }
+
+    @discardableResult
+    func spend(_ amount: Decimal, on day: Date, to category: TemplateCategory) -> SpendEntry {
+        let entry = SpendEntry(dayKey: day, categoryName: category.name, categoryID: category.uuid, amount: amount)
         context.insert(entry)
         return entry
     }

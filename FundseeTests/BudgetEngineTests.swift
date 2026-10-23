@@ -89,8 +89,8 @@ struct SpendingTests {
         fixture.spend(40, on: day, category: "Monthly", scope: .month)
         let engine = try fixture.engine()
         #expect(engine.spent(on: day) == 7.5)
-        #expect(engine.spent(on: day, category: "Lunch") == 4)
-        #expect(engine.spent(on: day, category: "Coffee") == 3.5)
+        #expect(engine.spent(on: day, category: fixture.officeLunch) == 4)
+        #expect(engine.spent(on: day, category: fixture.officeCoffee) == 3.5)
         #expect(engine.remaining(for: day) == 7.5)
     }
 
@@ -116,7 +116,6 @@ struct SpendingTests {
         let week = engine.weekInterval(containing: day)
         #expect(engine.spent(in: week, scope: .day) == 12)
         #expect(engine.spent(in: week, scope: .week) == 30)
-        #expect(engine.spent(in: week, category: "Lunch") == 10)
         let breakdown = engine.spentByCategory(in: week, scope: .day)
         #expect(breakdown.map(\.name) == ["Lunch", "Coffee"])
         #expect(breakdown.map(\.amount) == [10, 2])

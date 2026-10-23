@@ -1,5 +1,11 @@
 import Foundation
 
+struct CategorySpend {
+    let name: String
+    let iconName: String?
+    let amount: Decimal
+}
+
 struct BudgetEngine {
     var templates: [BudgetTemplate]
     var overrides: [DayOverride]
@@ -12,6 +18,8 @@ struct BudgetEngine {
     private var templatesByUUID: [String: BudgetTemplate]
     private var templateTotals: [ObjectIdentifier: Decimal]
     private var iconsByCategoryName: [String: String]
+    private var categoriesByUUID: [String: TemplateCategory]
+    private var categoryIDsByTemplate: [ObjectIdentifier: Set<String>]
 
     private struct ScopeTotals {
         var day: Decimal = 0
@@ -63,19 +71,29 @@ struct BudgetEngine {
         var templatesByUUID: [String: BudgetTemplate] = [:]
         var templateTotals: [ObjectIdentifier: Decimal] = [:]
         var iconsByCategoryName: [String: String] = [:]
+        var categoriesByUUID: [String: TemplateCategory] = [:]
+        var categoryIDsByTemplate: [ObjectIdentifier: Set<String>] = [:]
         for template in templates {
             if templatesByUUID[template.uuid] == nil {
                 templatesByUUID[template.uuid] = template
             }
             let categories = template.sortedCategories
             templateTotals[ObjectIdentifier(template)] = categories.reduce(0) { $0 + $1.amount }
-            for category in categories where iconsByCategoryName[category.name] == nil {
-                iconsByCategoryName[category.name] = category.iconName
+            categoryIDsByTemplate[ObjectIdentifier(template)] = Set(categories.map(\.uuid).filter { !$0.isEmpty })
+            for category in categories {
+                if iconsByCategoryName[category.name] == nil {
+                    iconsByCategoryName[category.name] = category.iconName
+                }
+                if !category.uuid.isEmpty, categoriesByUUID[category.uuid] == nil {
+                    categoriesByUUID[category.uuid] = category
+                }
             }
         }
         self.templatesByUUID = templatesByUUID
         self.templateTotals = templateTotals
         self.iconsByCategoryName = iconsByCategoryName
+        self.categoriesByUUID = categoriesByUUID
+        self.categoryIDsByTemplate = categoryIDsByTemplate
     }
 
     var carryover: CarryoverBehavior { settings?.carryover ?? .leaveAsIs }
@@ -147,8 +165,21 @@ struct BudgetEngine {
         totalsByDay[day(date)]?.day ?? 0
     }
 
-    func spent(on date: Date, category: String) -> Decimal {
-        entries(on: date).filter { $0.categoryName == category }.reduce(0) { $0 + $1.amount }
+    func entry(_ entry: SpendEntry, belongsTo categoryID: String, named name: String) -> Bool {
+        if !categoryID.isEmpty, entry.categoryID == categoryID { return true }
+        guard entry.categoryName == name else { return false }
+        guard !entry.categoryID.isEmpty, let template = template(for: entry.dayKey) else { return true }
+        return !(categoryIDsByTemplate[ObjectIdentifier(template)] ?? []).contains(entry.categoryID)
+    }
+
+    func spent(on date: Date, category: TemplateCategory) -> Decimal {
+        entries(on: date)
+            .filter { entry($0, belongsTo: category.uuid, named: category.name) }
+            .reduce(0) { $0 + $1.amount }
+    }
+
+    func categoryName(for entry: SpendEntry) -> String {
+        categoriesByUUID[entry.categoryID]?.name ?? entry.categoryName
     }
 
     func spent(in interval: DateInterval) -> Decimal {
@@ -163,30 +194,28 @@ struct BudgetEngine {
         total(in: week) { $0.day + $0.week }
     }
 
-    func spent(in interval: DateInterval, category: String) -> Decimal {
-        entries(in: interval).filter { $0.categoryName == category }.reduce(0) { $0 + $1.amount }
-    }
-
-    func spentByCategory(in interval: DateInterval, scope: SpendScope) -> [(name: String, amount: Decimal)] {
+    func spentByCategory(in interval: DateInterval, scope: SpendScope) -> [CategorySpend] {
         breakdown(of: entries(in: interval).filter { $0.scope == scope })
     }
 
-    func spentByCategory(on date: Date) -> [(name: String, amount: Decimal)] {
+    func spentByCategory(on date: Date) -> [CategorySpend] {
         breakdown(of: entries(on: date))
     }
 
-    private func breakdown(of entries: [SpendEntry]) -> [(name: String, amount: Decimal)] {
-        var totals: [String: Decimal] = [:]
+    private func breakdown(of entries: [SpendEntry]) -> [CategorySpend] {
+        var totals: [String: CategorySpend] = [:]
         for entry in entries {
-            totals[entry.categoryName, default: 0] += entry.amount
+            let category = categoriesByUUID[entry.categoryID]
+            let name = category?.name ?? entry.categoryName
+            let key = category?.uuid ?? "name:" + name
+            let previous = totals[key]?.amount ?? 0
+            totals[key] = CategorySpend(
+                name: name,
+                iconName: category?.iconName ?? iconsByCategoryName[name],
+                amount: previous + entry.amount
+            )
         }
-        return totals
-            .map { (name: $0.key, amount: $0.value) }
-            .sorted { ($0.amount, $1.name) > ($1.amount, $0.name) }
-    }
-
-    func categoryIconName(_ name: String) -> String? {
-        iconsByCategoryName[name]
+        return totals.values.sorted { ($0.amount, $1.name) > ($1.amount, $0.name) }
     }
 
     static func recentAmounts(in entries: [SpendEntry], limit: Int = 3) -> [Decimal] {

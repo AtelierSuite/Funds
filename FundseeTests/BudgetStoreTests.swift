@@ -56,7 +56,25 @@ struct BudgetStoreTests {
         fixture.spend(6, on: fixture.date(2026, 6, 2))
         try fixture.context.save()
         let store = BudgetStore(context: fixture.context)
-        #expect(store.recentAmounts(category: "Lunch") == [6, 12])
-        #expect(store.recentAmounts(category: "Coffee") == [])
+        #expect(store.recentAmounts(categoryID: nil, name: "Lunch") == [6, 12])
+        #expect(store.recentAmounts(categoryID: nil, name: "Coffee") == [])
+    }
+}
+
+@MainActor
+struct BudgetStoreRecentAmountTests {
+    @Test func recentAmountsFollowCategoryIDAndScope() throws {
+        let fixture = try BudgetFixture()
+        let day = fixture.date(2026, 6, 2)
+        fixture.spend(3, on: day, to: fixture.officeLunch)
+        fixture.officeLunch.name = "Team Lunch"
+        fixture.spend(11, on: day, category: "Team Lunch")
+        fixture.spend(30, on: day, category: "Weekly", scope: .week)
+        fixture.spend(31, on: day, category: "週予算", scope: .week)
+        try fixture.context.save()
+        let store = BudgetStore(context: fixture.context)
+        #expect(Set(store.recentAmounts(categoryID: fixture.officeLunch.uuid, name: "Team Lunch")) == [3, 11])
+        #expect(store.recentAmounts(categoryID: fixture.officeCoffee.uuid, name: "Coffee") == [])
+        #expect(Set(store.recentAmounts(categoryID: nil, name: "Ignored", scope: .week)) == [30, 31])
     }
 }

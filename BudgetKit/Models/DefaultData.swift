@@ -59,6 +59,8 @@ enum DefaultData {
             }
         }
 
+        backfillCategoryIDs(context: context)
+
         let settingsCount = (try? context.fetchCount(FetchDescriptor<PlanSettings>())) ?? 0
         if settingsCount == 0 {
             let settings = PlanSettings()
@@ -74,6 +76,44 @@ enum DefaultData {
             context.insert(settings)
         }
         try? context.save()
+    }
+
+    static func legacyCategoryID(templateUUID: String, sortOrder: Int, name: String) -> String {
+        "\(templateUUID)/\(sortOrder)/\(name)"
+    }
+
+    @MainActor
+    static func backfillCategoryIDs(context: ModelContext) {
+        let unidentified = (try? context.fetch(FetchDescriptor<TemplateCategory>(predicate: #Predicate { $0.uuid == "" }))) ?? []
+        for category in unidentified {
+            category.uuid = legacyCategoryID(
+                templateUUID: category.template?.uuid ?? "",
+                sortOrder: category.sortOrder,
+                name: category.name
+            )
+        }
+
+        let dayScope = SpendScope.day.rawValue
+        let unlinked = FetchDescriptor<SpendEntry>(predicate: #Predicate { $0.categoryID == "" && $0.scopeRaw == dayScope })
+        let entries = (try? context.fetch(unlinked)) ?? []
+        guard !entries.isEmpty else { return }
+
+        let templates = (try? context.fetch(FetchDescriptor<BudgetTemplate>(sortBy: [SortDescriptor(\.createdAt), SortDescriptor(\.uuid)]))) ?? []
+        let engine = BudgetEngine(
+            templates: templates,
+            overrides: (try? context.fetch(FetchDescriptor<DayOverride>())) ?? [],
+            entries: [],
+            settings: (try? context.fetch(FetchDescriptor<PlanSettings>()))?.first
+        )
+        for entry in entries {
+            let candidates = (engine.template(for: entry.dayKey).map { [$0] } ?? []) + templates
+            let match = candidates.lazy
+                .flatMap(\.sortedCategories)
+                .first { $0.name == entry.categoryName }
+            if let match {
+                entry.categoryID = match.uuid
+            }
+        }
     }
 
     private static let sampleAmounts: [String: [Decimal]] = [
@@ -119,7 +159,7 @@ enum DefaultData {
                     let base = category.amount > 0 ? category.amount.doubleValue : 10
                     let total = (base * factor).rounded()
                     guard total > 0 else { continue }
-                    let entry = SpendEntry(dayKey: day, categoryName: category.name, amount: Decimal(total))
+                    let entry = SpendEntry(dayKey: day, categoryName: category.name, categoryID: category.uuid, amount: Decimal(total))
                     let hour = 8 + category.sortOrder * 3
                     entry.timestamp = calendar.date(bySettingHour: min(hour, 21), minute: Int.random(in: 0..<60), second: 0, of: day) ?? day
                     context.insert(entry)

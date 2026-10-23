@@ -31,6 +31,7 @@ struct TodayView: View {
                 SpendInputSheet(
                     date: today,
                     categoryName: target.name,
+                    categoryID: target.categoryID,
                     scope: target.scope,
                     period: target.period
                 )
@@ -77,9 +78,9 @@ struct TodayView: View {
             if let template {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
                     ForEach(template.sortedCategories) { category in
-                        let used = engine.spent(on: today, category: category.name)
+                        let used = engine.spent(on: today, category: category)
                         Button {
-                            spendTarget = SpendTarget(name: category.name)
+                            spendTarget = SpendTarget(name: category.name, categoryID: category.uuid)
                         } label: {
                             CategoryGridCell(category: category, used: used)
                         }

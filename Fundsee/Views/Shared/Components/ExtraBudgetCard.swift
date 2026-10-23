@@ -57,7 +57,7 @@ struct ExtraBudgetCards: View {
         return ExtraBudgetCard(
             kind: kind,
             budget: budget,
-            used: engine.spent(in: interval, category: name)
+            used: engine.spent(in: interval, scope: kind.scope)
         ) {
             spendTarget = SpendTarget(name: name, scope: kind.scope, period: interval)
         }

@@ -9,6 +9,7 @@ struct SpendInputSheet: View {
 
     let date: Date
     let categoryName: String
+    let categoryID: String?
     let scope: SpendScope
     let period: DateInterval?
 
@@ -18,9 +19,10 @@ struct SpendInputSheet: View {
     @State private var recentAmounts: [Decimal] = []
     @FocusState private var amountFocused: Bool
 
-    init(date: Date, categoryName: String, scope: SpendScope = .day, period: DateInterval? = nil) {
+    init(date: Date, categoryName: String, categoryID: String? = nil, scope: SpendScope = .day, period: DateInterval? = nil) {
         self.date = date
         self.categoryName = categoryName
+        self.categoryID = categoryID
         self.scope = scope
         self.period = period
         let calendar = Calendar.current
@@ -36,7 +38,9 @@ struct SpendInputSheet: View {
     }
 
     private var recordedEntries: [SpendEntry] {
-        periodEntries.filter { $0.categoryName == categoryName }
+        guard scope == .day else { return periodEntries }
+        let engine = store.engine(around: date)
+        return periodEntries.filter { engine.entry($0, belongsTo: categoryID ?? "", named: categoryName) }
     }
 
     private var recordedTitle: String {
@@ -92,7 +96,7 @@ struct SpendInputSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("SpendInput.Add") {
                         if let amount, amount > 0 {
-                            modelContext.insert(SpendEntry(dayKey: date, categoryName: categoryName, amount: amount, scope: scope))
+                            modelContext.insert(SpendEntry(dayKey: date, categoryName: categoryName, categoryID: categoryID ?? "", amount: amount, scope: scope))
                             try? modelContext.save()
                         }
                         dismiss()
@@ -102,7 +106,7 @@ struct SpendInputSheet: View {
             }
             .onAppear {
                 amountFocused = true
-                recentAmounts = store.recentAmounts(category: categoryName)
+                recentAmounts = store.recentAmounts(categoryID: categoryID, name: categoryName, scope: scope)
             }
         }
         .presentationDetents([.medium, .large])

@@ -9,10 +9,10 @@ extension BudgetEngine {
         palette(from: spentByCategory(on: date))
     }
 
-    private func palette(from breakdown: [(name: String, amount: Decimal)]) -> [SpendSlice] {
+    private func palette(from breakdown: [CategorySpend]) -> [SpendSlice] {
         breakdown.compactMap { item in
             guard item.amount > 0 else { return nil }
-            let icon = categoryIconName(item.name) ?? "tag.fill"
+            let icon = item.iconName ?? "tag.fill"
             return SpendSlice(color: CategoryIconPalette.color(for: icon), weight: item.amount.doubleValue)
         }
     }
