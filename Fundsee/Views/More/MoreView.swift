@@ -64,6 +64,14 @@ struct MoreView: View {
                 }
 
                 Section {
+                    NavigationLink {
+                        ManageDataView()
+                    } label: {
+                        SettingsLabel(title: "More.ManageData", systemImage: "externaldrive.fill", color: .gray)
+                    }
+                }
+
+                Section {
                     Link(destination: URL(string: "https://github.com/AtelierSuite/Funds")!) {
                         HStack {
                             SettingsLabel(
