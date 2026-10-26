@@ -10,7 +10,10 @@ struct CategoryEntity: AppEntity {
     let iconName: String
 
     var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: "\(name)", image: .init(systemName: iconName))
+        DisplayRepresentation(
+            title: LocalizedStringResource("Intent.Category.Title", defaultValue: "\(name)"),
+            image: .init(systemName: iconName)
+        )
     }
 
     init(_ category: TemplateCategory) {

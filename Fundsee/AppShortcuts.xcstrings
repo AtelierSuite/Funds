@@ -1,104 +1,51 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Add an expense in ${applicationName}" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add an expense in ${applicationName}"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "${applicationName}に支出を追加"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "${applicationName}에 지출 추가"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在${applicationName}中添加支出"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在${applicationName}中新增支出"
-          }
-        }
-      }
-    },
-    "Check my budget in ${applicationName}" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check my budget in ${applicationName}"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "${applicationName}で予算を確認"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "${applicationName}에서 예산 확인"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在${applicationName}中查看预算"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在${applicationName}中查看預算"
-          }
-        }
-      }
-    },
     "How much is left in ${applicationName}" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "How much is left in ${applicationName}"
+            "values" : [
+              "How much is left in ${applicationName}",
+              "Check my budget in ${applicationName}"
+            ]
           }
         },
         "ja" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "${applicationName}の残りはいくら"
+            "values" : [
+              "${applicationName}の残りはいくら",
+              "${applicationName}で予算を確認"
+            ]
           }
         },
         "ko" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "${applicationName}에 얼마 남았어"
+            "values" : [
+              "${applicationName}에 얼마 남았어",
+              "${applicationName}에서 예산 확인"
+            ]
           }
         },
         "zh-Hans" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "${applicationName}还剩多少"
+            "values" : [
+              "${applicationName}还剩多少",
+              "在${applicationName}中查看预算"
+            ]
           }
         },
         "zh-Hant" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "${applicationName}還剩多少"
+            "values" : [
+              "${applicationName}還剩多少",
+              "在${applicationName}中查看預算"
+            ]
           }
         }
       }
@@ -106,33 +53,48 @@
     "Log spending in ${applicationName}" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "Log spending in ${applicationName}"
+            "values" : [
+              "Log spending in ${applicationName}",
+              "Add an expense in ${applicationName}"
+            ]
           }
         },
         "ja" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "${applicationName}で支出を記録"
+            "values" : [
+              "${applicationName}で支出を記録",
+              "${applicationName}に支出を追加"
+            ]
           }
         },
         "ko" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "${applicationName}에서 지출 기록"
+            "values" : [
+              "${applicationName}에서 지출 기록",
+              "${applicationName}에 지출 추가"
+            ]
           }
         },
         "zh-Hans" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "在${applicationName}中记录支出"
+            "values" : [
+              "在${applicationName}中记录支出",
+              "在${applicationName}中添加支出"
+            ]
           }
         },
         "zh-Hant" : {
-          "stringUnit" : {
+          "stringSet" : {
             "state" : "translated",
-            "value" : "在${applicationName}中記錄支出"
+            "values" : [
+              "在${applicationName}中記錄支出",
+              "在${applicationName}中新增支出"
+            ]
           }
         }
       }
