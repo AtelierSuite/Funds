@@ -522,7 +522,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "本日残り%@"
+            "value": "今日の残り%@"
           }
         },
         "ko": {
@@ -556,7 +556,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "本日%@超過"
+            "value": "今日%@超過"
           }
         },
         "ko": {
