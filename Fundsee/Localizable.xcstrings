@@ -624,7 +624,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の支出"
+            "value" : "本日の支出"
           }
         },
         "ko" : {
@@ -828,7 +828,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日使った金額をカテゴリに記録します。"
+            "value" : "本日使った金額をカテゴリに記録します。"
           }
         },
         "ko" : {
@@ -862,7 +862,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%2$@に%1$@を記録しました。今日の残りは%3$@です。"
+            "value" : "%2$@に%1$@を記録しました。本日の残りは%3$@です。"
           }
         },
         "ko" : {
@@ -896,7 +896,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%2$@に%1$@を記録しました。今日は%3$@の超過です。"
+            "value" : "%2$@に%1$@を記録しました。本日は%3$@の超過です。"
           }
         },
         "ko" : {
@@ -1032,7 +1032,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の予算があといくら残っているかをお知らせします。"
+            "value" : "本日の予算があといくら残っているかをお知らせします。"
           }
         },
         "ko" : {
@@ -1066,7 +1066,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の残りは%@です。"
+            "value" : "本日の残りは%@です。"
           }
         },
         "ko" : {
@@ -1100,7 +1100,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の予算を%@超過しています。"
+            "value" : "本日の予算を%@超過しています。"
           }
         },
         "ko" : {
@@ -1134,7 +1134,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の予算を確認"
+            "value" : "本日の予算を確認"
           }
         },
         "ko" : {
@@ -1984,7 +1984,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の残りは%@です。タップして1日を振り返りましょう。"
+            "value" : "本日の残りは%@です。タップして1日を振り返りましょう。"
           }
         },
         "ko" : {
@@ -2018,7 +2018,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の予算を%@超過しています。タップして1日を振り返りましょう。"
+            "value" : "本日の予算を%@超過しています。タップして1日を振り返りましょう。"
           }
         },
         "ko" : {
@@ -4025,7 +4025,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日"
+            "value" : "本日"
           }
         },
         "ko" : {
@@ -4603,7 +4603,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "上のボタンから今日のプランを選んでください。"
+            "value" : "上のボタンから本日のプランを選んでください。"
           }
         },
         "ko" : {
@@ -4637,7 +4637,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日のプランがありません"
+            "value" : "本日のプランがありません"
           }
         },
         "ko" : {
@@ -4841,7 +4841,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の残り%@"
+            "value" : "本日残り%@"
           }
         },
         "ko" : {
@@ -4875,7 +4875,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日%@超過"
+            "value" : "本日%@超過"
           }
         },
         "ko" : {
@@ -5045,7 +5045,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "今日の予算"
+            "value" : "本日の予算"
           }
         },
         "ko" : {
