@@ -488,7 +488,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "今日の予算の残りを表示します。"
+            "value": "本日の予算の残りを表示します。"
           }
         },
         "ko": {
@@ -726,7 +726,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "今日の予算"
+            "value": "本日の予算"
           }
         },
         "ko": {
