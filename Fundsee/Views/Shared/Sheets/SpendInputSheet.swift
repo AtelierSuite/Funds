@@ -43,6 +43,27 @@ struct SpendInputSheet: View {
         return periodEntries.filter { engine.entry($0, belongsTo: categoryID ?? "", named: categoryName) }
     }
 
+    private var category: TemplateCategory? {
+        let categories = store.engine(around: date).template(for: date)?.sortedCategories ?? []
+        if let categoryID, !categoryID.isEmpty, let match = categories.first(where: { $0.uuid == categoryID }) {
+            return match
+        }
+        return categories.first { $0.name == categoryName }
+    }
+
+    private var budget: Decimal? {
+        let engine = store.engine(around: date)
+        switch scope {
+        case .day: return category?.amount
+        case .week: return engine.weeklyExtra
+        case .month: return engine.monthlyExtra
+        }
+    }
+
+    private var spent: Decimal {
+        recordedEntries.reduce(0) { $0 + $1.amount }
+    }
+
     private var recordedTitle: String {
         if period != nil {
             return String(localized: "SpendInput.Recorded", defaultValue: "Recorded")
@@ -136,6 +157,16 @@ struct SpendInputSheet: View {
                 .font(.system(size: 44, weight: .bold, design: .rounded))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
+
+            if let budget {
+                SpendPreviewBar(
+                    used: spent,
+                    pending: max(0, amount ?? 0),
+                    budget: budget,
+                    tint: category?.iconColor ?? .accentColor
+                )
+                .padding(.horizontal, 24)
+            }
 
             if !recentAmounts.isEmpty {
                 GlassEffectContainer {
