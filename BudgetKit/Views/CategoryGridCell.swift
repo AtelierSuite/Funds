@@ -1,20 +1,22 @@
 import SwiftUI
 
 struct CategoryGridCell: View {
+    static let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 3)
+    static let spacing: CGFloat = 10
+
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @ScaledMetric(relativeTo: .subheadline) private var slashHeight = 10.5
 
-    let category: TemplateCategory
-    let used: Decimal
+    let category: CategorySnapshot
 
     private var labelColor: Color {
         colorScheme == .light ? category.iconColor.mix(with: .black, by: 0.55) : .white
     }
 
     private var spentText: some View {
-        Text(used.compactCurrencyString)
+        Text(category.used.compactCurrencyString)
             .font(.system(.subheadline, design: .rounded, weight: .bold))
             .foregroundStyle(labelColor)
             .contentTransition(.numericText())
@@ -34,10 +36,10 @@ struct CategoryGridCell: View {
     }
 
     var body: some View {
-        let over = used > category.amount
+        let over = category.used > category.amount
         let fraction = category.amount > 0
-            ? min(1, used.doubleValue / category.amount.doubleValue)
-            : (used > 0 ? 1 : 0)
+            ? min(1, category.used.doubleValue / category.amount.doubleValue)
+            : (category.used > 0 ? 1 : 0)
         VStack(alignment: .leading, spacing: 6) {
             Image(systemName: category.iconName)
                 .font(.system(size: 20))

@@ -76,13 +76,13 @@ struct TodayView: View {
         let template = engine.template(for: today)
         return Section {
             if let template {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
+                LazyVGrid(columns: CategoryGridCell.columns, spacing: CategoryGridCell.spacing) {
                     ForEach(template.sortedCategories) { category in
                         let used = engine.spent(on: today, category: category)
                         Button {
                             spendTarget = SpendTarget(name: category.name, categoryID: category.uuid)
                         } label: {
-                            CategoryGridCell(category: category, used: used)
+                            CategoryGridCell(category: CategorySnapshot(category, used: used))
                         }
                         .buttonStyle(.plain)
                         .matchedTransitionSource(id: category.name, in: cardZoom)

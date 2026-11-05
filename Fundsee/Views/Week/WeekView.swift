@@ -131,13 +131,13 @@ struct WeekView: View {
             .padding(.vertical, 4)
 
             if let template = engine.template(for: shown) {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
+                LazyVGrid(columns: CategoryGridCell.columns, spacing: CategoryGridCell.spacing) {
                     ForEach(template.sortedCategories) { category in
                         let categorySpent = engine.spent(on: shown, category: category)
                         Button {
                             spendTarget = SpendTarget(name: category.name, categoryID: category.uuid)
                         } label: {
-                            CategoryGridCell(category: category, used: categorySpent)
+                            CategoryGridCell(category: CategorySnapshot(category, used: categorySpent))
                         }
                         .buttonStyle(.plain)
                         .matchedTransitionSource(id: category.name, in: cardZoom)

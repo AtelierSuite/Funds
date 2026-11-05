@@ -6,6 +6,7 @@ enum NotificationService {
     static let dailyID = "fundsee.report.daily"
     static let weeklyID = "fundsee.report.weekly"
     static let monthlyID = "fundsee.report.monthly"
+    static let reminderCategoryID = "fundsee.reminder"
 
     private static var latestReschedule: Task<Void, Never>?
 
@@ -32,6 +33,9 @@ enum NotificationService {
     private static func replacePending(with requests: [UNNotificationRequest]) async {
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
+        center.setNotificationCategories([
+            UNNotificationCategory(identifier: reminderCategoryID, actions: [], intentIdentifiers: [])
+        ])
         guard await center.notificationSettings().authorizationStatus == .authorized else { return }
         for request in requests {
             try? await center.add(request)
@@ -46,6 +50,7 @@ enum NotificationService {
                 ? String(localized: "Notification.Reminder.Body", defaultValue: "Time to log today's spending.")
                 : occurrence.message
             content.sound = .default
+            content.categoryIdentifier = reminderCategoryID
             let trigger = UNCalendarNotificationTrigger(dateMatching: occurrence.dateComponents, repeats: false)
             return UNNotificationRequest(identifier: occurrence.identifier, content: content, trigger: trigger)
         }
