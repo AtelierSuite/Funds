@@ -31,11 +31,14 @@ struct ContentView: View {
             DefaultData.seedIfNeeded(context: modelContext)
             DefaultData.seedSampleDataIfRequested(context: modelContext)
         }
+        .task(id: store.revision) {
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            await NotificationService.reschedule(engine: store.engine())
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 store.refresh()
-                let engine = store.engine()
-                Task { await NotificationService.reschedule(engine: engine) }
             } else {
                 WidgetCenter.shared.reloadAllTimelines()
             }

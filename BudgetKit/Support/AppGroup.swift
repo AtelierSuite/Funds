@@ -7,6 +7,7 @@ enum AppGroup {
     static let schema = Schema([
         BudgetTemplate.self,
         TemplateCategory.self,
+        TemplateReminder.self,
         DayOverride.self,
         SpendEntry.self,
         PlanSettings.self,

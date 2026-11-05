@@ -35,13 +35,12 @@ struct ManageDataView: View {
         deleteAll(SpendEntry.self)
         deleteAll(DayOverride.self)
         deleteAll(TemplateCategory.self)
+        deleteAll(TemplateReminder.self)
         deleteAll(BudgetTemplate.self)
         deleteAll(PlanSettings.self)
         try? modelContext.save()
 
-        UNUserNotificationCenter.current().removePendingNotificationRequests(
-            withIdentifiers: [NotificationService.dailyID, NotificationService.weeklyID, NotificationService.monthlyID]
-        )
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         WidgetCenter.shared.reloadAllTimelines()
         hasCompletedOnboarding = false
     }

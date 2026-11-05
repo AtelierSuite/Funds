@@ -11,6 +11,8 @@ final class BudgetTemplate {
     var categories: [TemplateCategory]? = []
     @Relationship(deleteRule: .cascade, inverse: \DayOverride.template)
     var overrides: [DayOverride]? = []
+    @Relationship(deleteRule: .cascade, inverse: \TemplateReminder.template)
+    var reminders: [TemplateReminder]? = []
 
     init(name: String, iconName: String) {
         self.uuid = UUID().uuidString
@@ -21,6 +23,12 @@ final class BudgetTemplate {
 
     var sortedCategories: [TemplateCategory] {
         (categories ?? []).sorted { $0.sortOrder < $1.sortOrder }
+    }
+
+    var sortedReminders: [TemplateReminder] {
+        (reminders ?? []).sorted {
+            $0.createdAt != $1.createdAt ? $0.createdAt < $1.createdAt : $0.uuid < $1.uuid
+        }
     }
 
     var total: Decimal {

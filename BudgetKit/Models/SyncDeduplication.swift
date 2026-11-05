@@ -6,6 +6,7 @@ enum SyncDeduplication {
     @discardableResult
     static func mergeDuplicates(context: ModelContext) -> Bool {
         var changed = mergeTemplates(context: context)
+        changed = trimReminders(context: context) || changed
         changed = mergeSettings(context: context) || changed
         changed = removeUnusedSeedTemplates(context: context) || changed
         if changed {
@@ -49,7 +50,23 @@ enum SyncDeduplication {
         for override in duplicate.overrides ?? [] {
             override.template = survivor
         }
+        for reminder in duplicate.reminders ?? [] {
+            reminder.template = survivor
+        }
         context.delete(duplicate)
+    }
+
+    @MainActor
+    private static func trimReminders(context: ModelContext) -> Bool {
+        let templates = (try? context.fetch(FetchDescriptor<BudgetTemplate>())) ?? []
+        var changed = false
+        for template in templates {
+            for reminder in template.sortedReminders.dropFirst(TemplateReminder.limitPerPlan) {
+                context.delete(reminder)
+                changed = true
+            }
+        }
+        return changed
     }
 
     @MainActor
@@ -64,7 +81,9 @@ enum SyncDeduplication {
         for template in templates where seedIDs.contains(template.uuid) && !planned.contains(template.uuid) {
             guard legacyIcons.contains(template.iconName) else { continue }
             let categories = template.categories ?? []
-            guard categories.allSatisfy({ $0.amount == 0 }), (template.overrides ?? []).isEmpty else { continue }
+            guard categories.allSatisfy({ $0.amount == 0 }),
+                  (template.overrides ?? []).isEmpty,
+                  (template.reminders ?? []).isEmpty else { continue }
             let ids = categories.map(\.uuid)
             let used = (try? context.fetchCount(FetchDescriptor<SpendEntry>(predicate: #Predicate { ids.contains($0.categoryID) }))) ?? 1
             guard used == 0 else { continue }
@@ -112,7 +131,8 @@ extension BudgetTemplate {
     }
 
     private var contentKey: String {
-        ([name, iconName] + sortedCategories.map { "\($0.uuid)=\($0.name):\($0.amount)" }).joined(separator: "|")
+        ([name, iconName] + sortedCategories.map { "\($0.uuid)=\($0.name):\($0.amount)" } + sortedReminders.map(\.uuid))
+            .joined(separator: "|")
     }
 }
 

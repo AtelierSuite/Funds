@@ -3,7 +3,10 @@ import SwiftUI
 
 struct TemplateDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(BudgetStore.self) private var store
     @Bindable var template: BudgetTemplate
+
+    @State private var notificationsDenied = false
 
     private static let icons = [
         "building.2.fill", "house.fill", "sofa.fill", "party.popper.fill",
@@ -56,6 +59,25 @@ struct TemplateDetailView: View {
                 }
             }
             Section {
+                ForEach(template.sortedReminders) { reminder in
+                    ReminderRow(reminder: reminder)
+                }
+                .onDelete { indexSet in
+                    let sorted = template.sortedReminders
+                    for index in indexSet {
+                        modelContext.delete(sorted[index])
+                    }
+                    try? modelContext.save()
+                }
+                if template.sortedReminders.count < TemplateReminder.limitPerPlan {
+                    Button("Template.AddReminder", systemImage: "plus", action: addReminder)
+                }
+            } header: {
+                Text("Template.Section.Reminders")
+            } footer: {
+                Text(notificationsDenied ? "Template.Reminders.Footer.Denied" : "Template.Reminders.Footer")
+            }
+            Section {
                 LabeledContent("Template.DailyTotal", value: template.total.currencyString)
                     .font(.headline)
             }
@@ -63,5 +85,18 @@ struct TemplateDetailView: View {
         .navigationTitle(template.name)
         .toolbarTitleDisplayMode(.inline)
         .onDisappear { try? modelContext.save() }
+        .task { notificationsDenied = await NotificationService.isDenied() }
+    }
+
+    private func addReminder() {
+        let reminder = TemplateReminder()
+        reminder.template = template
+        modelContext.insert(reminder)
+        try? modelContext.save()
+        Task {
+            _ = await NotificationService.requestAuthorization()
+            notificationsDenied = await NotificationService.isDenied()
+            await NotificationService.reschedule(engine: store.engine())
+        }
     }
 }
