@@ -29,31 +29,31 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Funds sends you daily, weekly, and monthly budget reports."
+            "value" : "Funds sends you budget reports and the reminders you set."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fundsは日次・週次・月次の予算レポートを通知でお届けします。"
+            "value" : "Fundsは予算レポートと、設定したリマインダーを通知でお届けします。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Funds가 일간, 주간, 월간 예산 리포트를 보내 드립니다."
+            "value" : "Funds가 예산 리포트와 설정한 리마인더를 보내 드립니다."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Funds 会向你发送每日、每周和每月的预算报告。"
+            "value" : "Funds 会向你发送预算报告和你设置的提醒。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Funds 會向你傳送每日、每週和每月的預算報告。"
+            "value" : "Funds 會向你傳送預算報告和你設定的提醒。"
           }
         }
       }

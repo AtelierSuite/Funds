@@ -11,7 +11,9 @@ Funds is a visual budget management app for iOS 26.0+. Users define budget templ
 - The models look over-constrained (every property defaulted, relationships optional, no unique attributes) because CloudKit requires it. Keep that shape.
 - Carryover math is deliberately bounded: next-day carry resets at week boundaries, next-week carry reaches back exactly one week. These are product decisions, not bugs.
 - Two past bugs to not reintroduce: `DateInterval.contains` includes its end instant, so day-in-week checks must be half-open; and two BarMarks at the same x silently stack in Swift Charts, which is why charts use `yStart`/`yEnd`.
-- Notification report content is computed at schedule time and refreshed on foreground, so it is only as current as the last app launch. Accepted limitation to avoid an extension.
+- Notification report content is computed at schedule time and refreshed whenever `BudgetStore.revision` changes, so it is only as current as the app's last run. Accepted limitation to avoid an extension.
+- Plan reminders are scheduled as dated one-shots rather than repeating weekday triggers, because a repeating trigger can't skip a day overridden to another plan. The window is 14 days: it fits the engine's padding across a year boundary and at most 42 requests under the system's 64 pending limit. Reminders therefore stop if the app isn't opened for 14 days. Accepted limitation.
+- Two devices can each add reminders to one plan and sync past the limit of 3, so `SyncDeduplication` trims to the oldest 3.
 - There is no `AppIcon.appiconset`; the Icon Composer document `Fundsee/AppIcon.icon` is the only icon source.
 - `DEVELOPMENT_TEAM` is intentionally empty. Simulator-only for now; devices and real CloudKit sync need a team plus the App Group and iCloud container registered.
 - Localization keys are `Pascal.Case.Dotted`, never the English text. Strings with arguments use `String(localized: "Key.Path", defaultValue: "English with \(value)")` so the key stays symbolic and the English lives in one place. Plain SwiftUI literals (`Text("Tab.Today")`) take their English from the catalog's `en` entry.
