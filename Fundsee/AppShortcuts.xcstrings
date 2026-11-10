@@ -1,6 +1,109 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "How am I doing ${period} in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "How am I doing ${period} in ${applicationName}",
+              "Show my spending ${period} in ${applicationName}",
+              "Budget summary in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で${period}の調子はどう",
+              "${applicationName}で${period}の支出を見せて",
+              "${applicationName}で予算のまとめ"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 ${period} 어때",
+              "${applicationName}에서 ${period} 지출 보여 줘",
+              "${applicationName}에서 예산 요약"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}里${period}花得怎么样",
+              "在${applicationName}中显示${period}的支出",
+              "${applicationName}预算总结"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}裡${period}花得怎麼樣",
+              "在${applicationName}中顯示${period}的支出",
+              "${applicationName}預算總結"
+            ]
+          }
+        }
+      }
+    },
+    "How much is left for ${category} in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "How much is left for ${category} in ${applicationName}",
+              "Check a category in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で${category}の残りはいくら",
+              "${applicationName}でカテゴリを確認"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 ${category} 얼마 남았어",
+              "${applicationName}에서 카테고리 확인"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}里${category}还剩多少",
+              "在${applicationName}中查看类别"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}裡${category}還剩多少",
+              "在${applicationName}中查看類別"
+            ]
+          }
+        }
+      }
+    },
     "How much is left in ${applicationName}" : {
       "localizations" : {
         "en" : {
@@ -94,6 +197,256 @@
             "values" : [
               "在${applicationName}中記錄支出",
               "在${applicationName}中新增支出"
+            ]
+          }
+        }
+      }
+    },
+    "Open ${tab} in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Open ${tab} in ${applicationName}",
+              "Show ${tab} in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で${tab}を開く",
+              "${applicationName}で${tab}を表示"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 ${tab} 열기",
+              "${applicationName}에서 ${tab} 보기"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中打开${tab}",
+              "在${applicationName}中显示${tab}"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中打開${tab}",
+              "在${applicationName}中顯示${tab}"
+            ]
+          }
+        }
+      }
+    },
+    "Switch to ${plan} in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Switch to ${plan} in ${applicationName}",
+              "Use ${plan} today in ${applicationName}",
+              "Change today's plan in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で${plan}に切り替え",
+              "${applicationName}で今日は${plan}にする",
+              "${applicationName}で今日のプランを変更"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 ${plan}(으)로 전환",
+              "${applicationName}에서 오늘은 ${plan} 사용",
+              "${applicationName}에서 오늘 플랜 변경"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中切换到${plan}",
+              "在${applicationName}中今天使用${plan}",
+              "在${applicationName}中更改今天的方案"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中切換到${plan}",
+              "在${applicationName}中今天使用${plan}",
+              "在${applicationName}中更改今天的方案"
+            ]
+          }
+        }
+      }
+    },
+    "Undo my last expense in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Undo my last expense in ${applicationName}",
+              "Delete my last expense in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で直前の支出を取り消す",
+              "${applicationName}で最後の支出を削除"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 마지막 지출 취소",
+              "${applicationName}에서 마지막 지출 삭제"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中撤销上一笔支出",
+              "在${applicationName}中删除上一笔支出"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中撤銷上一筆支出",
+              "在${applicationName}中刪除上一筆支出"
+            ]
+          }
+        }
+      }
+    },
+    "What did I spend today in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "What did I spend today in ${applicationName}",
+              "Show today's expenses in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で今日何に使った",
+              "${applicationName}で今日の支出を見せて"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 오늘 뭐에 썼어",
+              "${applicationName}에서 오늘 지출 보여 줘"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}里我今天花了什么",
+              "在${applicationName}中显示今天的支出"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}裡我今天花了什麼",
+              "在${applicationName}中顯示今天的支出"
+            ]
+          }
+        }
+      }
+    },
+    "What's my plan today in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "What's my plan today in ${applicationName}",
+              "Which plan is today in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で今日のプランは",
+              "${applicationName}で今日はどのプラン"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 오늘 플랜이 뭐야",
+              "${applicationName}에서 오늘은 어떤 플랜이야"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}里今天是什么方案",
+              "${applicationName}里今天用哪个方案"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}裡今天是什麼方案",
+              "${applicationName}裡今天用哪個方案"
             ]
           }
         }

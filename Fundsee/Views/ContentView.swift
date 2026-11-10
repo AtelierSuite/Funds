@@ -7,10 +7,10 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(BudgetStore.self) private var store
 
-    @State private var selectedTab = UserDefaults.standard.string(forKey: "initialTab") ?? "today"
+    @State private var navigation = AppNavigation.shared
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $navigation.selectedTab) {
             Tab("Tab.Today", systemImage: "sun.max.fill", value: "today") {
                 TodayView()
             }
@@ -30,6 +30,7 @@ struct ContentView: View {
         .task {
             DefaultData.seedIfNeeded(context: modelContext)
             DefaultData.seedSampleDataIfRequested(context: modelContext)
+            FundsShortcuts.updateAppShortcutParameters()
         }
         .task(id: store.revision) {
             try? await Task.sleep(for: .seconds(1))
