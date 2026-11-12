@@ -8,6 +8,8 @@ struct MoreView: View {
 
     @State private var exportURL: URL?
     @State private var templatesExportURL: URL?
+    @State private var openedPlan: BudgetTemplate?
+    @State private var navigation = AppNavigation.shared
 
     var body: some View {
         NavigationStack {
@@ -94,6 +96,15 @@ struct MoreView: View {
             }
             .sheet(item: $templatesExportURL) { url in
                 ShareSheet(url: url)
+            }
+            .navigationDestination(item: $openedPlan) { template in
+                TemplateDetailView(template: template)
+            }
+            .onChange(of: navigation.planID, initial: true) { _, id in
+                guard let id else { return }
+                navigation.planID = nil
+                let descriptor = FetchDescriptor<BudgetTemplate>(predicate: #Predicate { $0.uuid == id })
+                openedPlan = (try? modelContext.fetch(descriptor))?.first
             }
         }
     }

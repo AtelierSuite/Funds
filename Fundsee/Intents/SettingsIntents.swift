@@ -121,6 +121,41 @@ struct SetCarryoverIntent: AppIntent {
     }
 }
 
+struct GetOverallBudgetIntent: AppIntent {
+    static let title: LocalizedStringResource = "Intent.GetOverallBudget.Title"
+    static let description = IntentDescription("Intent.GetOverallBudget.Description")
+
+    @Parameter(title: "Intent.Parameter.OverallBudget")
+    var budget: OverallBudgetKind
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Intent.GetOverallBudget.Summary \(\.$budget)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<Double> & ProvidesDialog {
+        let engine = IntentData.engine()
+        let value = budget == .weekly ? engine.weeklyExtra : engine.monthlyExtra
+        let label = budget.label
+        return .result(value: value.doubleValue, dialog: IntentDialog(text: String(
+            localized: "Intent.GetOverallBudget.Dialog",
+            defaultValue: "Your \(label) is \(value.currencyString)."
+        )))
+    }
+}
+
+struct GetCarryoverIntent: AppIntent {
+    static let title: LocalizedStringResource = "Intent.GetCarryover.Title"
+    static let description = IntentDescription("Intent.GetCarryover.Description")
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<CarryoverOption> & ProvidesDialog {
+        let behavior = IntentData.engine().carryover
+        let option = CarryoverOption(rawValue: behavior.rawValue) ?? .leaveAsIs
+        return .result(value: option, dialog: IntentDialog(text: "\(behavior.title). \(behavior.subtitle)"))
+    }
+}
+
 struct OpenTabIntent: AppIntent {
     static let title: LocalizedStringResource = "Intent.OpenTab.Title"
     static let description = IntentDescription("Intent.OpenTab.Description")

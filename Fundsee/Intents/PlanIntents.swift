@@ -63,6 +63,43 @@ struct SetDayPlanIntent: AppIntent {
     }
 }
 
+struct SetPlanForDatesIntent: AppIntent {
+    static let title: LocalizedStringResource = "Intent.SetPlanForDates.Title"
+    static let description = IntentDescription("Intent.SetPlanForDates.Description")
+
+    @Parameter(title: "Intent.Parameter.Plan")
+    var plan: PlanEntity
+
+    @Parameter(title: "Intent.Parameter.StartDate", kind: .date)
+    var start: Date
+
+    @Parameter(title: "Intent.Parameter.EndDate", kind: .date)
+    var end: Date
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Intent.SetPlanForDates.Summary \(\.$plan) \(\.$start) \(\.$end)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let interval = IntentData.days(from: start, through: end)
+        let template = try IntentData.template(for: plan)
+        let days = IntentData.engine(around: interval.start).days(in: interval).filter { $0 >= interval.start && $0 < interval.end }
+        guard days.count <= 366 else { throw IntentDataError.rangeTooLong }
+        IntentData.removeOverrides(in: interval)
+        for day in days {
+            IntentData.context.insert(DayOverride(dayKey: day, template: template))
+        }
+        try await IntentData.commit()
+        let name = template.name
+        let range = IntentData.rangeLabel(interval)
+        return .result(dialog: IntentDialog(text: String(
+            localized: "Intent.SetPlanForDates.Dialog",
+            defaultValue: "\(range) now uses \(name)."
+        )))
+    }
+}
+
 struct ResetDayPlanIntent: AppIntent {
     static let title: LocalizedStringResource = "Intent.ResetDayPlan.Title"
     static let description = IntentDescription("Intent.ResetDayPlan.Description")
@@ -70,13 +107,28 @@ struct ResetDayPlanIntent: AppIntent {
     @Parameter(title: "Intent.Parameter.Date", kind: .date)
     var date: Date?
 
+    @Parameter(title: "Intent.Parameter.EndDate", kind: .date)
+    var end: Date?
+
     static var parameterSummary: some ParameterSummary {
-        Summary("Intent.ResetDayPlan.Summary \(\.$date)")
+        Summary("Intent.ResetDayPlan.Summary \(\.$date)") {
+            \.$end
+        }
     }
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let day = date ?? .now
+        if let end {
+            let interval = IntentData.days(from: day, through: end)
+            IntentData.removeOverrides(in: interval)
+            try await IntentData.commit()
+            let range = IntentData.rangeLabel(interval)
+            return .result(dialog: IntentDialog(text: String(
+                localized: "Intent.ResetDayPlan.Dialog.Range",
+                defaultValue: "\(range) is back to the weekly plan."
+            )))
+        }
         IntentData.removeOverride(on: day)
         try await IntentData.commit()
         let dayText = IntentData.dayLabel(day)
@@ -90,6 +142,35 @@ struct ResetDayPlanIntent: AppIntent {
         return .result(dialog: IntentDialog(text: String(
             localized: "Intent.ResetDayPlan.Dialog",
             defaultValue: "\(dayText) is back to its weekly plan, \(name)."
+        )))
+    }
+}
+
+struct GetWeekdayPlanIntent: AppIntent {
+    static let title: LocalizedStringResource = "Intent.GetWeekdayPlan.Title"
+    static let description = IntentDescription("Intent.GetWeekdayPlan.Description")
+
+    @Parameter(title: "Intent.Parameter.Weekday")
+    var weekday: WeekdayOption
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Intent.GetWeekdayPlan.Summary \(\.$weekday)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<PlanEntity?> & ProvidesDialog {
+        let uuid = IntentData.settings().templateUUID(forWeekday: weekday.rawValue)
+        let day = weekday.name
+        guard let uuid, let template = IntentData.templates().first(where: { $0.uuid == uuid }) else {
+            return .result(value: nil, dialog: IntentDialog(text: String(
+                localized: "Intent.GetWeekdayPlan.Dialog.None",
+                defaultValue: "\(day) has no plan."
+            )))
+        }
+        let name = template.name
+        return .result(value: PlanEntity(template), dialog: IntentDialog(text: String(
+            localized: "Intent.GetWeekdayPlan.Dialog",
+            defaultValue: "Every \(day) uses \(name)."
         )))
     }
 }
@@ -212,6 +293,78 @@ struct DeletePlanIntent: AppIntent {
         return .result(dialog: IntentDialog(text: String(
             localized: "Intent.DeletePlan.Dialog",
             defaultValue: "Deleted \(name)."
+        )))
+    }
+}
+
+struct DuplicatePlanIntent: AppIntent {
+    static let title: LocalizedStringResource = "Intent.DuplicatePlan.Title"
+    static let description = IntentDescription("Intent.DuplicatePlan.Description")
+
+    @Parameter(title: "Intent.Parameter.Plan")
+    var plan: PlanEntity
+
+    @Parameter(title: "Intent.Property.Name")
+    var name: String?
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Intent.DuplicatePlan.Summary \(\.$plan)") {
+            \.$name
+        }
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<PlanEntity> & ProvidesDialog {
+        let source = try IntentData.template(for: plan)
+        let sourceName = source.name
+        let trimmed = name?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let copyName = trimmed.isEmpty
+            ? String(localized: "Intent.DuplicatePlan.CopyName", defaultValue: "\(sourceName) Copy")
+            : trimmed
+        let context = IntentData.context
+        let copy = BudgetTemplate(name: copyName, iconName: source.iconName)
+        context.insert(copy)
+        for category in source.sortedCategories {
+            let duplicate = TemplateCategory(name: category.name, amount: category.amount, sortOrder: category.sortOrder, iconName: category.iconName)
+            duplicate.template = copy
+            context.insert(duplicate)
+        }
+        for reminder in source.sortedReminders {
+            let duplicate = TemplateReminder(hour: reminder.hour, minute: reminder.minute, message: reminder.message)
+            duplicate.template = copy
+            context.insert(duplicate)
+        }
+        try await IntentData.commit()
+        return .result(value: PlanEntity(copy), dialog: IntentDialog(text: String(
+            localized: "Intent.DuplicatePlan.Dialog",
+            defaultValue: "Created \(copyName) from \(sourceName)."
+        )))
+    }
+}
+
+struct SetPlanIconIntent: AppIntent {
+    static let title: LocalizedStringResource = "Intent.SetPlanIcon.Title"
+    static let description = IntentDescription("Intent.SetPlanIcon.Description")
+
+    @Parameter(title: "Intent.Parameter.Plan")
+    var plan: PlanEntity
+
+    @Parameter(title: "Intent.Parameter.Icon")
+    var icon: PlanIconOption
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Intent.SetPlanIcon.Summary \(\.$plan) \(\.$icon)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<PlanEntity> & ProvidesDialog {
+        let template = try IntentData.template(for: plan)
+        template.iconName = icon.rawValue
+        try await IntentData.commit()
+        let name = template.name
+        return .result(value: PlanEntity(template), dialog: IntentDialog(text: String(
+            localized: "Intent.SetPlanIcon.Dialog",
+            defaultValue: "Changed the icon for \(name)."
         )))
     }
 }

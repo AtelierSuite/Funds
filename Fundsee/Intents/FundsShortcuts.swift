@@ -77,6 +77,15 @@ struct FundsShortcuts: AppShortcutsProvider {
             systemImageName: "square.grid.2x2.fill"
         )
         AppShortcut(
+            intent: GetTotalSpentIntent(),
+            phrases: [
+                "How much have I spent this month in \(.applicationName)",
+                "Total spending in \(.applicationName)",
+            ],
+            shortTitle: "Intent.TotalSpent.Title",
+            systemImageName: "sum"
+        )
+        AppShortcut(
             intent: OpenTabIntent(),
             phrases: [
                 "Open \(\.$tab) in \(.applicationName)",

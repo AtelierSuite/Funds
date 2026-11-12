@@ -51,13 +51,59 @@ enum IntentData {
         return (try? context.fetch(descriptor))?.first
     }
 
-    static func removeOverride(on date: Date) {
+    static func categoryNames() -> [String: String] {
+        let categories = (try? context.fetch(FetchDescriptor<TemplateCategory>())) ?? []
+        var names: [String: String] = [:]
+        for category in categories where !category.uuid.isEmpty {
+            names[category.uuid] = category.name
+        }
+        return names
+    }
+
+    static func days(from start: Date, through end: Date) -> DateInterval {
         let calendar = Calendar.current
-        let start = calendar.startOfDay(for: date)
-        let end = calendar.date(byAdding: .day, value: 1, to: start) ?? start
+        let first = calendar.startOfDay(for: min(start, end))
+        let last = calendar.startOfDay(for: max(start, end))
+        let next = calendar.date(byAdding: .day, value: 1, to: last) ?? last
+        return DateInterval(start: first, end: next)
+    }
+
+    static func rangeLabel(_ interval: DateInterval) -> String {
+        let calendar = Calendar.current
+        let last = calendar.date(byAdding: .day, value: -1, to: interval.end) ?? interval.start
+        if calendar.isDate(interval.start, inSameDayAs: last) {
+            return dayLabel(interval.start)
+        }
+        return (interval.start..<last).formatted(.interval.month(.abbreviated).day().year())
+    }
+
+    static func removeOverride(on date: Date) {
+        removeOverrides(in: days(from: date, through: date))
+    }
+
+    static func removeOverrides(in interval: DateInterval) {
+        let start = interval.start
+        let end = interval.end
         let descriptor = FetchDescriptor<DayOverride>(predicate: #Predicate { $0.dayKey >= start && $0.dayKey < end })
         for override in (try? context.fetch(descriptor)) ?? [] {
             context.delete(override)
+        }
+    }
+
+    static func status(for period: BudgetPeriod, at date: Date = .now) -> (budget: Decimal, used: Decimal) {
+        let engine = engine(around: date)
+        switch period {
+        case .today:
+            return (engine.effectiveBudget(for: date), engine.spent(on: date))
+        case .week:
+            return (engine.weekBudget(containing: date), engine.weekSpent(in: engine.weekInterval(containing: date)))
+        case .month:
+            return (engine.monthBudget(containing: date), engine.spent(in: engine.monthInterval(containing: date)))
+        case .year:
+            let year = Calendar.current.dateInterval(of: .year, for: date) ?? engine.monthInterval(containing: date)
+            let months = engine.days(in: year).filter { Calendar.current.component(.day, from: $0) == 1 }
+            let budget = months.reduce(Decimal(0)) { $0 + engine.monthBudget(containing: $1) }
+            return (budget, engine.spent(in: year))
         }
     }
 
@@ -66,6 +112,7 @@ enum IntentData {
         WidgetCenter.shared.reloadAllTimelines()
         FundsShortcuts.updateAppShortcutParameters()
         await NotificationService.reschedule(engine: engine())
+        await SpotlightIndex.refresh()
     }
 
     static func amount(_ value: Double) -> Decimal? {
@@ -93,6 +140,9 @@ enum IntentDataError: Error, CustomLocalizedStringResourceConvertible {
     case noRecords
     case categoryNotInPlan(category: String, plan: String)
     case reminderLimit(plan: String)
+    case reminderNotFound
+    case rangeTooLong
+    case currencyMismatch(code: String)
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -106,6 +156,12 @@ enum IntentDataError: Error, CustomLocalizedStringResourceConvertible {
             LocalizedStringResource("Intent.Error.CategoryNotInPlan", defaultValue: "\(plan) has no category named \(category).")
         case .reminderLimit(let plan):
             LocalizedStringResource("Intent.Error.ReminderLimit", defaultValue: "\(plan) already has \(String(TemplateReminder.limitPerPlan)) reminders, the most a plan can have.")
+        case .reminderNotFound:
+            LocalizedStringResource("Intent.Error.ReminderNotFound", defaultValue: "That reminder no longer exists.")
+        case .rangeTooLong:
+            LocalizedStringResource("Intent.Error.RangeTooLong", defaultValue: "Choose a range of a year or less.")
+        case .currencyMismatch(let code):
+            LocalizedStringResource("Intent.Error.CurrencyMismatch", defaultValue: "This payment is in \(code), which is not the currency Funds uses. Log it by hand in your currency.")
         }
     }
 }

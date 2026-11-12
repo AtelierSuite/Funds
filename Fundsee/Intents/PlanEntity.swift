@@ -1,9 +1,10 @@
 import AppIntents
 import SwiftData
 
-struct PlanEntity: AppEntity {
+struct PlanEntity: IndexedEntity {
     static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Intent.Parameter.Plan")
     static let defaultQuery = PlanEntityQuery()
+    static let activityType = "com.tsubuzaki.Fundsee.plan"
 
     let id: String
 

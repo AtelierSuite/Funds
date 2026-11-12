@@ -138,3 +138,35 @@ struct DeleteCategoryIntent: AppIntent {
         )))
     }
 }
+
+struct SetCategoryIconIntent: AppIntent {
+    static let title: LocalizedStringResource = "Intent.SetCategoryIcon.Title"
+    static let description = IntentDescription("Intent.SetCategoryIcon.Description")
+
+    @Parameter(title: "Intent.Parameter.Plan")
+    var plan: PlanEntity
+
+    @Parameter(title: "Intent.Parameter.Category")
+    var category: CategoryEntity
+
+    @Parameter(title: "Intent.Parameter.Icon")
+    var icon: CategoryIconOption
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Intent.SetCategoryIcon.Summary \(\.$category) \(\.$plan) \(\.$icon)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let template = try IntentData.template(for: plan)
+        let match = try IntentData.category(category, in: template)
+        match.iconName = icon.rawValue
+        try await IntentData.commit()
+        let name = match.name
+        let planName = template.name
+        return .result(dialog: IntentDialog(text: String(
+            localized: "Intent.SetCategoryIcon.Dialog",
+            defaultValue: "Changed the icon for \(name) in \(planName)."
+        )))
+    }
+}

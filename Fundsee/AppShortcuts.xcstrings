@@ -55,6 +55,55 @@
         }
       }
     },
+    "How much have I spent this month in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "How much have I spent this month in ${applicationName}",
+              "Total spending in ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}で今月いくら使った",
+              "${applicationName}で支出の合計"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 이번 달 얼마 썼어",
+              "${applicationName}에서 총 지출"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "我这个月在${applicationName}里花了多少",
+              "${applicationName}里的支出总额"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "我這個月在${applicationName}裡花了多少",
+              "${applicationName}裡的支出總額"
+            ]
+          }
+        }
+      }
+    },
     "How much is left for ${category} in ${applicationName}" : {
       "localizations" : {
         "en" : {

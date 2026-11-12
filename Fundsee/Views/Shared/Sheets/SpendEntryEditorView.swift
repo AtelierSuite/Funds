@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftData
 import SwiftUI
 
@@ -37,6 +38,9 @@ struct SpendEntryEditorView: View {
         }
         .navigationTitle("EntryEditor.Title")
         .toolbarTitleDisplayMode(.inline)
+        .userActivity(SpendRecordEntity.activityType) { activity in
+            activity.appEntityIdentifier = EntityIdentifier(for: SpendRecordEntity.self, identifier: SpendRecordEntity.id(for: entry))
+        }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button(role: .confirm) { save() }

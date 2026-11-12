@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftData
 import SwiftUI
 
@@ -8,11 +9,6 @@ struct TemplateDetailView: View {
 
     @State private var notificationsDenied = false
 
-    private static let icons = [
-        "building.2.fill", "house.fill", "sofa.fill", "party.popper.fill",
-        "airplane", "figure.walk", "cart.fill", "star.fill",
-    ]
-
     var body: some View {
         List {
             Section("Template.Section.Name") {
@@ -20,7 +16,7 @@ struct TemplateDetailView: View {
             }
             Section("Template.Section.Icon") {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) {
-                    ForEach(Self.icons, id: \.self) { icon in
+                    ForEach(AppSymbol.planIcons, id: \.self) { icon in
                         Button {
                             template.iconName = icon
                         } label: {
@@ -84,6 +80,10 @@ struct TemplateDetailView: View {
         }
         .navigationTitle(template.name)
         .toolbarTitleDisplayMode(.inline)
+        .userActivity(PlanEntity.activityType) { activity in
+            activity.title = template.name
+            activity.appEntityIdentifier = EntityIdentifier(for: PlanEntity.self, identifier: template.uuid)
+        }
         .onDisappear { try? modelContext.save() }
         .task { notificationsDenied = await NotificationService.isDenied() }
     }
