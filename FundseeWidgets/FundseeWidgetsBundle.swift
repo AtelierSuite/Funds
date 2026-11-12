@@ -5,5 +5,6 @@ import SwiftUI
 struct FundseeWidgetsBundle: WidgetBundle {
     var body: some Widget {
         TodayBudgetWidget()
+        LogSpendingControl()
     }
 }

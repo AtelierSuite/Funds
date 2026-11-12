@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 import WidgetKit
 
@@ -43,30 +44,41 @@ struct TodayBudgetContentView: View {
 
         case .systemMedium:
             HStack(spacing: 16) {
-                ring
+                ringButton
                 VStack(alignment: .leading, spacing: 6) {
                     ForEach(entry.categories.prefix(4)) { category in
-                        HStack(spacing: 6) {
-                            Image(systemName: category.iconName)
-                                .font(.caption)
-                                .symbolRenderingMode(.hierarchical)
-                                .foregroundStyle(CategoryIconPalette.color(for: category.iconName))
-                                .frame(width: 18)
-                            Text(category.name)
-                                .font(.caption2)
-                                .lineLimit(1)
-                            Spacer()
-                            Text(category.used.compactCurrencyString)
-                                .font(.caption2.weight(.semibold))
-                                .foregroundStyle(category.used > category.amount ? .red : .primary)
+                        Button(intent: QuickLogIntent(categoryID: category.id)) {
+                            HStack(spacing: 6) {
+                                Image(systemName: category.iconName)
+                                    .font(.caption)
+                                    .symbolRenderingMode(.hierarchical)
+                                    .foregroundStyle(CategoryIconPalette.color(for: category.iconName))
+                                    .frame(width: 18)
+                                Text(category.name)
+                                    .font(.caption2)
+                                    .lineLimit(1)
+                                Spacer()
+                                Text(category.used.compactCurrencyString)
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(category.used > category.amount ? .red : .primary)
+                            }
+                            .contentShape(.rect)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
 
         default:
+            ringButton
+        }
+    }
+
+    private var ringButton: some View {
+        Button(intent: QuickLogIntent()) {
             ring
         }
+        .buttonStyle(.plain)
     }
 
     private var ring: some View {

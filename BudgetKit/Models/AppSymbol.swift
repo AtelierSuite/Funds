@@ -3,6 +3,11 @@ import Foundation
 enum AppSymbol {
     static let budgetTemplate = "square.grid.2x2.fill"
 
+    static let planIcons = [
+        "building.2.fill", "house.fill", "sofa.fill", "party.popper.fill",
+        "airplane", "figure.walk", "cart.fill", "star.fill",
+    ]
+
     static let categoryIcons = [
         "sunrise.fill",
         "takeoutbag.and.cup.and.straw.fill",

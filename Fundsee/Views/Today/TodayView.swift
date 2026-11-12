@@ -6,6 +6,9 @@ struct TodayView: View {
 
     @State private var spendTarget: SpendTarget?
     @State private var showingTemplatePicker = false
+    @State private var showingQuickLog = false
+    @State private var pickedTarget: SpendTarget?
+    @State private var navigation = AppNavigation.shared
     @Namespace private var cardZoom
 
     private var engine: BudgetEngine { store.engine(around: today) }
@@ -37,7 +40,37 @@ struct TodayView: View {
                 )
                 .navigationTransition(.zoom(sourceID: target.name, in: cardZoom))
             }
+            .sheet(isPresented: $showingQuickLog, onDismiss: presentPickedTarget) {
+                QuickLogPickerSheet { target in
+                    pickedTarget = target
+                    showingQuickLog = false
+                }
+            }
+            .onChange(of: navigation.quickLog, initial: true) { _, request in
+                guard let request else { return }
+                navigation.quickLog = nil
+                handle(request)
+            }
         }
+    }
+
+    private func handle(_ request: QuickLogRequest) {
+        showingTemplatePicker = false
+        let categories = engine.template(for: today)?.sortedCategories ?? []
+        if let id = request.categoryID,
+           let category = categories.first(where: { $0.uuid == id }) ?? categories.first(where: { $0.name == id }) {
+            showingQuickLog = false
+            spendTarget = SpendTarget(name: category.name, categoryID: category.uuid)
+        } else {
+            spendTarget = nil
+            showingQuickLog = true
+        }
+    }
+
+    private func presentPickedTarget() {
+        guard let pickedTarget else { return }
+        self.pickedTarget = nil
+        spendTarget = pickedTarget
     }
 
     private var ringSection: some View {
